@@ -69,7 +69,7 @@
     "scripts": {
         "artifacts": "napi artifacts",
         "build": "napi build dist --js main.js --dts main.d.ts --platform --release --strip",
-        "postbuild": "sudo ./lib/bun.sh ./scripts/pretsup.ts && tsup && sudo ./lib/bun.sh ./scripts/posttsup.ts",
+        "postbuild": "bun ./scripts/pretsup.ts && tsup && bun ./scripts/posttsup.ts",
         "build:debug": "napi build dist --platform",
         "prepublishOnly": "napi prepublish -t npm",
         "release": "bun run build && bun test && bun ./scripts/prepublish.ts",
@@ -78,8 +78,5 @@
         "universal": "napi universal",
         "version": "napi version"
     },
-    "packageManager": "yarn@1.22.22",
-    "dependencies": {
-        "vite-node": "^2.1.2"
-    }
+    "packageManager": "yarn@1.22.22"
 }
