@@ -1,6 +1,6 @@
 import { basename, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import Bun from 'bun';
+import Bun from '../lib/bun';
 import chalk from 'chalk';
 import fg from 'fast-glob';
 

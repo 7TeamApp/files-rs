@@ -1,4 +1,4 @@
-import Bun from 'bun';
+import Bun from '../lib/bun';
 
 const pathJs = 'dist/main.js';
 let cjFile = await Bun.file(pathJs).text();
