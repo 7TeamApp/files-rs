@@ -61,7 +61,8 @@
         "fast-glob": "^3.3.2",
         "tsup": "^8.3.0",
         "typescript": "5.6.3",
-        "vitest": "2.1.2"
+        "vitest": "2.1.2",
+        "vite-node": "^2.1.2"
     },
     "engines": {
         "node": ">= 10"
