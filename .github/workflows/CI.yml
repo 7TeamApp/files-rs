@@ -146,7 +146,6 @@ jobs:
             uses: actions/setup-node@v4
             with:
                 node-version: 20
-                cache: yarn
           - name: Check node
             if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
             run: |
