@@ -20,7 +20,7 @@ permissions:
     pull_request: null
 defaults:
     run:
-        shell: nu {0}
+        shell: bash
 jobs:
     Build:
         strategy:
