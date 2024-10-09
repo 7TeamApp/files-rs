@@ -69,7 +69,7 @@
     "scripts": {
         "artifacts": "napi artifacts",
         "build": "napi build dist --js main.js --dts main.d.ts --platform --release --strip",
-        "postbuild": "./lib/bun.sh ./scripts/pretsup.ts && tsup && ./lib/bun.sh ./scripts/posttsup.ts",
+        "postbuild": "sudo ./lib/bun.sh ./scripts/pretsup.ts && tsup && sudo ./lib/bun.sh ./scripts/posttsup.ts",
         "build:debug": "napi build dist --platform",
         "prepublishOnly": "napi prepublish -t npm",
         "release": "bun run build && bun test && bun ./scripts/prepublish.ts",
