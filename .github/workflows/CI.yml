@@ -85,7 +85,7 @@ jobs:
                   - host: ubuntu-latest
                     target: x86_64-unknown-freebsd
                     build: |
-                        sudo pkg install -y -f node npm nu
+                        sudo pkg install -y -f node npm
                         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --profile minimal --default-toolchain stable -y
                         . "$HOME/.cargo/env"
                         sudo npm i -g yarn
@@ -116,16 +116,6 @@ jobs:
                 environment_variables: 'DEBUG RUSTUP_IO_THREADS'
                 shell: bash
                 run: ${{ matrix.settings.build }}
-          - name: Install Nu
-            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
-            uses: hustcer/setup-nu@v3.13
-          - name: Check Nu
-            run: |
-                print $'Nu path:(which nu)(char nl)'
-                def greeting [name: string] {
-                    print $'Hello ($name)'
-                }
-                greeting hustcer
           - name: Install rust-toolchain
             if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && !matrix.settings.docker }}
             uses: dtolnay/rust-toolchain@stable
