@@ -90,7 +90,8 @@ jobs:
                         . "$HOME/.cargo/env"
                         sudo npm i -g yarn
                         yarn install
-                        alias bun="node-vite"
+                        yarn add vite-node -g
+                        alias bun="vite-node"
                         yarn build
         name: Build stable-${{ matrix.settings.target }}-node@20
         runs-on: ${{ matrix.settings.host }}
