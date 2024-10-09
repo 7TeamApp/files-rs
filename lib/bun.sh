@@ -6,7 +6,7 @@ if [ $# -lt 1 ]; then
 fi
 
 if command -v bun &> /dev/null; then
-  bun "$@"
+  sudo bun "$@"
 else
-  vite-node "$@"
+  sudo vite-node "$@"
 fi
