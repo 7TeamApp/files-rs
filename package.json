@@ -70,7 +70,7 @@
     "scripts": {
         "artifacts": "napi artifacts",
         "build": "napi build dist --js main.js --dts main.d.ts --platform --release --strip",
-        "postbuild": "node -r @swc-node/register ./scripts/pretsup.ts && tsup && node -r @swc-node/register ./scripts/posttsup.ts",
+        "postbuild": "node --loader @swc-node/register/esm ./scripts/pretsup.ts && tsup && node --loader @swc-node/register/esm ./scripts/posttsup.ts",
         "build:debug": "napi build dist --platform",
         "prepublishOnly": "napi prepublish -t npm",
         "release": "bun run build && bun test && bun ./scripts/prepublish.ts",

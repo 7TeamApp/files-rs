@@ -1,4 +1,4 @@
-const fs = require('fs');
+import fs from 'node:fs';
 let Bun;
 
 class File{
@@ -19,7 +19,8 @@ const _Bun = {
 };
 
 try{
-    Bun = require('bun');
+    Bun = _Bun;
+    // Bun = require('bun');
 }catch{
     Bun = _Bun;
 }
