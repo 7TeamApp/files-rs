@@ -1,3 +1,2 @@
 **/*
-!/dist
-**/dist/**/main.*
+!/dist/**/{index.*,*.node}

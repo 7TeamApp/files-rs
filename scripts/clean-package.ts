@@ -1,4 +1,4 @@
-import Bun from 'bun';
+import Bun from '../lib/bun';
 
 const pg = await Bun.file('./package.json').json();
 

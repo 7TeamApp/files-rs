@@ -55,7 +55,6 @@
     "devDependencies": {
         "@biomejs/biome": "^1.9.3",
         "@napi-rs/cli": "^2.18.4",
-        "@swc-node/register": "1.10.9",
         "@swc/core": "1.7.28",
         "@types/node": "22.7.5",
         "chalk": "^5.3.0",
@@ -70,12 +69,13 @@
     "scripts": {
         "artifacts": "napi artifacts",
         "build": "napi build dist --js main.js --dts main.d.ts --platform --release --strip",
-        "postbuild": "node --loader @swc-node/register/esm ./scripts/pretsup.ts && tsup && node --loader @swc-node/register/esm ./scripts/posttsup.ts",
+        "postbuild": "tsup --config ./scripts/tsup.config.ts && node ./dist/pretsup.js && tsup && node ./dist/posttsup.js",
         "build:debug": "napi build dist --platform",
         "prepublishOnly": "napi prepublish -t npm",
         "release": "bun run build && bun test && bun ./scripts/prepublish.ts",
         "format": "biome check --write ./",
         "test": "bun test",
+        "some": "tsup scripts -d scripts --format esm --no-config true",
         "universal": "napi universal",
         "version": "napi version"
     },

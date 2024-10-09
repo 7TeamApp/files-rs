@@ -1,28 +1,47 @@
+import { exec } from 'node:child_process';
 import fs from 'node:fs';
 let Bun;
 
-class File{
-
-}
-
 const _Bun = {
     write: (path: string, data: string) =>
-        fs.writeFileSync(path, data, (err) =>
-            console.error(err)
-        )
-    ,
+        fs.writeFileSync(path, data, (err) => console.error(err)),
     file: (path: string) => ({
-        text: () => fs.readFileSync(path, 'utf8', err => 
-            console.error(err)
-        )
+        text: (): string =>
+            fs.readFileSync(path, 'utf8', (err) =>
+                console.error(err)
+            ),
+
+        json: () =>
+            JSON.parse(
+                fs.readFileSync(path, 'utf8', (err) =>
+                    console.error(err)
+                )
+            ),
+        exists: () => fs.existsSync(path)
+    }),
+    spawn: (args: string[]) => ({
+        exited: new Promise((res, rej) => {
+            exec(args.join(' '), (err, stdout, stderr) => {
+                if (err) {
+                    rej(console.error(err.message));
+                    return;
+                }
+
+                if (stderr) {
+                    rej(console.error(stderr));
+                    return;
+                }
+
+                res(console.log(`\n${stdout}`));
+            });
+        })
     })
 };
 
-try{
-    Bun = _Bun;
-    // Bun = require('bun');
-}catch{
+try {
+    Bun = require('bun');
+} catch {
     Bun = _Bun;
 }
 
-export default _Bun;
+export default Bun;
