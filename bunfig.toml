@@ -1,0 +1,10 @@
+[install]
+peer = true
+auto = "auto"
+
+[run]
+bun = true
+shell = "bun"
+
+[install.lockfile]
+print = "yarn"
