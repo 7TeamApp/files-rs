@@ -261,7 +261,6 @@ jobs:
         runs-on: ${{ matrix.settings.host }}
         steps:
           - name: Checkout
-            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.package-manager != 'bun' }}
             uses: actions/checkout@v4.2.1
           - name: Install node
             if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
@@ -287,13 +286,13 @@ jobs:
             if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.package-manager == 'yarn' }}
             run: yarn install
           - name: Download node artifacts
-            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.package-manager != 'bun' }}
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
             uses: actions/download-artifact@v4
             with:
                 name: bindings-${{ matrix.settings.target }}
                 path: 'node'
           - name: Download dist artifacts
-            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.package-manager != 'bun' }}
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
             uses: actions/download-artifact@v4
             with:
                 name: bindings-dist
