@@ -31,7 +31,8 @@
         ".": {
             "import": "./dist/index.js",
             "require": "./dist/index.cjs"
-        }
+        },
+        "./*": "./*"
     },
     "typesVersions": {
         "*": {
@@ -76,14 +77,14 @@
         "vitest": "2.1.2"
     },
     "overrides": {
-        "rollup": "npm:@rollup/wasm-node"
+        "rollup": "@rollup/wasm-node"
     },
     "resolutions": {
-        "rollup": "npm:@rollup/wasm-node"
+        "rollup": "@rollup/wasm-node"
     },
     "pnpm": {
         "overrides": {
-            "rollup": "npm:@rollup/wasm-node"
+            "rollup": "@rollup/wasm-node"
         }
     },
     "engines": {
@@ -98,7 +99,6 @@
         "release": "bun run build && bun test && bun ./scripts/prepublish.ts",
         "format": "biome check --write ./",
         "test": "bun test",
-        "some": "tsup scripts -d scripts --format esm --no-config true",
         "universal": "napi universal",
         "version": "napi version"
     }
