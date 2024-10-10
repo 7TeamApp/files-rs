@@ -68,9 +68,9 @@
     },
     "scripts": {
         "artifacts": "napi artifacts",
-        "build": "napi build dist --js main.js --dts main.d.ts --platform --release --strip",
+        "build": "napi build node --platform --release --strip",
         "_postbuild": "bun ./scripts/pretsup.ts && tsup && bun ./scripts/posttsup.ts",
-        "build:debug": "napi build dist --platform",
+        "build:debug": "napi build node --platform",
         "prepublishOnly": "napi prepublish -t npm",
         "release": "bun run build && bun test && bun ./scripts/prepublish.ts",
         "format": "biome check --write ./",

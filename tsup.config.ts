@@ -1,7 +1,7 @@
 import type { Options } from 'tsup';
 
 export default (<Options>{
-    entryPoints: ['src/**/*.ts'],
+    entryPoints: ['src/**/!(main).ts'],
     format: ['cjs', 'esm'],
     dts: true,
     cjsInterop: true,
@@ -13,5 +13,5 @@ export default (<Options>{
     minifySyntax: false,
     keepNames: true,
     outDir: 'dist',
-    external: [/.*node$/]
+    external: [/.*node$/, /.*-javascript/]
 });
