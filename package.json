@@ -15,15 +15,7 @@
     "bugs": {
         "url": "https://github.com/7TeamApp/files-rs/issues"
     },
-    "keywords": [
-        "rust",
-        "napi",
-        "rs",
-        "copy",
-        "glob",
-        "files",
-        "fs"
-    ],
+    "keywords": ["rust", "napi", "rs", "copy", "glob", "files", "fs"],
     "main": "dist/index.cjs",
     "module": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -36,10 +28,7 @@
     },
     "typesVersions": {
         "*": {
-            "*": [
-                "./dist/*",
-                "./*"
-            ]
+            "*": ["./dist/*", "./*"]
         }
     },
     "napi": {
@@ -80,12 +69,8 @@
         "rollup": "npm:@rollup/wasm-node"
     },
     "pnpm": {
-        "packageExtensions": {
-            "vitest": {
-                "dependencies": {
-                    "rollup": "npm:@rollup/wasm-node"
-                }
-            }
+        "overrides": {
+            "rollup": "npm:@rollup/wasm-node"
         }
     },
     "engines": {
