@@ -325,7 +325,9 @@ jobs:
                 shell: bash
                 run: |
                     sudo pkg install -y -f node npm
-                    sudo npm i -g yarn
+                    sudo npm i -g corepack
+                    corepack enable
+                    corepack install --global yarn@latest
                     yarn install
                     yarn dlx vitest run
           - name: Init (pnpm)

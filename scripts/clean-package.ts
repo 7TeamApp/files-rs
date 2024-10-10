@@ -6,5 +6,8 @@ pg.scripts = undefined;
 pg.devDependencies = undefined;
 pg.napi = undefined;
 pg.packageManager = undefined;
+pg.overrides = undefined;
+pg.resolutions = undefined;
+pg.pnpm = undefined;
 
 await Bun.write('./package.json', JSON.stringify(pg));
