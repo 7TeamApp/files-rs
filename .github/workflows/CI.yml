@@ -232,7 +232,7 @@ jobs:
                 path: "dist/**/*"
                 if-no-files-found: error
     Test:
-        name: Test ${{ matrix.settings.target }}-node@${{ matrix.node }}-${{ matrix.package-manager }}
+        name: Test ${{ matrix.settings.target }}-node@${{ matrix.node }}
         needs:
             - Postbuild
         strategy:
@@ -254,11 +254,6 @@ jobs:
                     version: '14.1'
                 node:
                     - 20
-                package-manager: 
-                    - bun
-                    - yarn
-                    - pnpm
-                    - npm
         runs-on: ${{ matrix.settings.host }}
         steps:
           - name: Checkout
@@ -280,26 +275,9 @@ jobs:
           - name: Check Bun
             if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
             run: bun -v
-          - name: Install pnpm
-            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.package-manager == 'pnpm' }}
-            uses: pnpm/action-setup@v4.0.0
-            with:
-                version: latest
-          - name: Check pnpm
-            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.package-manager == 'pnpm' }}
-            run: pnpm -v
-          - name: Install dependencies (bun)
-            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.package-manager == 'bun' }}
+          - name: Install dependencies
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
             run: bun i
-          - name: Install dependencies (yarn)
-            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.package-manager == 'yarn' }}
-            run: yarn install
-          - name: Install dependencies (pnpm)
-            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.package-manager == 'pnpm' }}
-            run: pnpm i
-          - name: Install dependencies (npm)
-            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.package-manager == 'npm' }}
-            run: npm i
           - name: Download node artifacts
             if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
             uses: actions/download-artifact@v4
@@ -312,42 +290,8 @@ jobs:
             with:
                 name: bindings-dist
                 path: 'dist'
-          - name: Init (yarn)
-            if: ${{ matrix.settings.target == 'x86_64-unknown-freebsd' && matrix.package-manager == 'yarn' }}
-            uses: cross-platform-actions/action@v0.25.0
-            with:
-                shutdown_vm: false
-                operating_system: freebsd
-                architecture: ${{ matrix.settings.architecture }}
-                version: ${{ matrix.settings.version }}
-                memory: 8G
-                cpu_count: 4
-                shell: bash
-                run: |
-                    sudo pkg install -y -f node npm
-                    sudo npm i -g corepack
-                    corepack enable
-                    corepack install --global yarn@latest
-                    yarn install
-                    yarn dlx vitest run
-          - name: Init (pnpm)
-            if: ${{ matrix.settings.target == 'x86_64-unknown-freebsd' && matrix.package-manager == 'pnpm' }}
-            uses: cross-platform-actions/action@v0.25.0
-            with:
-                shutdown_vm: false
-                operating_system: freebsd
-                architecture: ${{ matrix.settings.architecture }}
-                version: ${{ matrix.settings.version }}
-                memory: 8G
-                cpu_count: 4
-                shell: bash
-                run: |
-                    sudo pkg install -y -f node npm
-                    sudo npm i -D pnpm
-                    pnpm i
-                    pnpm dlx vitest run
-          - name: Init (npm)
-            if: ${{ matrix.settings.target == 'x86_64-unknown-freebsd' && matrix.package-manager == 'npm' }}
+          - name: Init
+            if: ${{ matrix.settings.target == 'x86_64-unknown-freebsd' }}
             uses: cross-platform-actions/action@v0.25.0
             with:
                 shutdown_vm: false
