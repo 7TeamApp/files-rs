@@ -236,7 +236,7 @@ jobs:
                 path: "dist/**/*"
                 if-no-files-found: error
     Test:
-        name: Test ${{ matrix.settings.target }}-node@${{ matrix.node }}-bun
+        name: Test ${{ matrix.settings.target }}-node@${{ matrix.node }}-${{ matrix.package-manager }}
         needs:
             - Postbuild
         strategy:
@@ -255,8 +255,11 @@ jobs:
                   - host: ubuntu-latest
                     target: x86_64-unknown-freebsd
                     architecture: x86-64
+                    version: '14.1'
                 node:
                     - 20
+                package-manager: 
+                    - bun
         runs-on: ${{ matrix.settings.host }}
         steps:
           - name: Checkout
@@ -300,7 +303,7 @@ jobs:
                 shutdown_vm: false
                 operating_system: freebsd
                 architecture: ${{ matrix.settings.architecture }}
-                version: '14.1'
+                version: ${{ matrix.settings.version }}
                 memory: 8G
                 cpu_count: 4
                 shell: bash
