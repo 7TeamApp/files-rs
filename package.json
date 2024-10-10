@@ -70,7 +70,7 @@
     },
     "pnpm": {
         "overrides": {
-            "rollup": "npm:@rollup/wasm-node"
+            "@rollup": "npm:@rollup/wasm-node"
         }
     },
     "engines": {
