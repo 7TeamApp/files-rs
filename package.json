@@ -90,6 +90,5 @@
         "some": "tsup scripts -d scripts --format esm --no-config true",
         "universal": "napi universal",
         "version": "napi version"
-    },
-    "packageManager": "yarn@1.22.22"
+    }
 }
