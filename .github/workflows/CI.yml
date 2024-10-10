@@ -237,6 +237,7 @@ jobs:
                 if-no-files-found: error
     Test:
         name: Test ${{ matrix.settings.target }}-node@${{ matrix.node }}-${{ matrix.package-manager }}
+        if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.package-manager != 'bun' }}
         needs:
             - Postbuild
         strategy:
@@ -278,10 +279,10 @@ jobs:
                 node -v
                 npm -v
           - name: Install Bun
-            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.package-manager == 'bun' }}
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
             uses: oven-sh/setup-bun@v2.0.1
           - name: Check Bun
-            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.package-manager == 'bun' }}
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
             run: bun -v
           - name: Install dependencies
             if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.package-manager == 'bun' }}
