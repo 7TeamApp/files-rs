@@ -343,7 +343,7 @@ jobs:
                 shell: bash
                 run: |
                     sudo pkg install -y -f node npm
-                    sudo npm i -g pnpm
+                    sudo npm i -D pnpm
                     pnpm i
                     pnpm dlx vitest run
           - name: Init (npm)
