@@ -98,6 +98,16 @@
                     }
                 }
             }
+        },{
+            "include": ["./**/*.test.*", "./**/*.spec.*"],
+            "linter": {
+                "rules": {
+                    "suspicious": {
+                        "noConsole": "off",
+                        "noConsoleLog": "off"
+                    }
+                }
+            }
         }
     ]
 }
