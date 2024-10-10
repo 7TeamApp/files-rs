@@ -228,7 +228,9 @@ jobs:
           - name: Install dependencies
             run: bun i
           - name: Postbuild
-            run: bun run _postbuild
+            run: |
+                bun run build
+                bun run _postbuild
           - name: Upload artifact
             uses: actions/upload-artifact@v4
             with:
