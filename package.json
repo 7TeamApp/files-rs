@@ -79,6 +79,15 @@
     "overrides": {
         "rollup": "npm:@rollup/wasm-node"
     },
+    "pnpm": {
+        "packageExtensions": {
+            "vitest": {
+                "dependencies": {
+                    "rollup": "npm:@rollup/wasm-node"
+                }
+            }
+        }
+    },
     "engines": {
         "node": ">= 10"
     },
