@@ -260,6 +260,7 @@ jobs:
                     - 20
                 package-manager: 
                     - bun
+                    - yarn
         runs-on: ${{ matrix.settings.host }}
         steps:
           - name: Checkout
@@ -277,14 +278,17 @@ jobs:
                 node -v
                 npm -v
           - name: Install Bun
-            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.package-manager == 'bun' }}
             uses: oven-sh/setup-bun@v2.0.1
           - name: Check Bun
-            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.package-manager == 'bun' }}
             run: bun -v
           - name: Install dependencies
-            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.package-manager == 'bun' }}
             run: bun i
+          - name: Install dependencies
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.package-manager == 'yarn' }}
+            run: yarn install
           - name: Download node artifacts
             uses: actions/download-artifact@v4
             with:
@@ -296,7 +300,7 @@ jobs:
                 name: bindings-dist
                 path: 'dist'
           - name: Init
-            if: ${{ matrix.settings.target == 'x86_64-unknown-freebsd' }}
+            if: ${{ matrix.settings.target == 'x86_64-unknown-freebsd' && matrix.package-manager == 'yarn' }}
             id: test-freebsd
             uses: cross-platform-actions/action@v0.25.0
             with:
