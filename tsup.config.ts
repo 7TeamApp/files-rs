@@ -7,11 +7,11 @@ export default (<Options>{
     cjsInterop: true,
     splitting: true,
     publicDir: './public',
-    minify: true,
-    minifyWhitespace: true,
-    minifyIdentifiers: true,
-    minifySyntax: true,
-    keepNames: false,
+    minify: false,
+    minifyWhitespace: false,
+    minifyIdentifiers: false,
+    minifySyntax: false,
+    keepNames: true,
     outDir: 'dist',
     external: [/.*node$/, /.*-javascript/]
 });
