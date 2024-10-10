@@ -252,6 +252,9 @@ jobs:
                   - host: macos-latest
                     target: x86_64-apple-darwin
                     architecture: x64
+                  - host: ubuntu-latest
+                    target: x86_64-unknown-freebsd
+                    architecture: x86-64
                 node:
                     - 20
         runs-on: ${{ matrix.settings.host }}
@@ -277,6 +280,7 @@ jobs:
             if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
             run: bun -v
           - name: Install dependencies
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
             run: bun i
           - name: Download node artifacts
             uses: actions/download-artifact@v4
@@ -288,7 +292,25 @@ jobs:
             with:
                 name: bindings-dist
                 path: 'dist'
+          - name: Init
+            if: ${{ matrix.settings.target == 'x86_64-unknown-freebsd' }}
+            id: test-freebsd
+            uses: cross-platform-actions/action@v0.25.0
+            with:
+                shutdown_vm: false
+                operating_system: freebsd
+                architecture: ${{ matrix.settings.architecture }}
+                version: '14.1'
+                memory: 8G
+                cpu_count: 4
+                shell: bash
+                run: |
+                    sudo pkg install -y -f node npm
+                    sudo npm i -g yarn
+                    yarn install
+                    npx vitest run
           - name: Test bindings
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
             run: bun run test
     Publish:
         name: Publish
