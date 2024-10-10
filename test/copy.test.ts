@@ -9,6 +9,7 @@ const destFolder = join(__dirname, 'dest');
 const fileConstent = 'tertewqwdwd';
 
 beforeEach(async () => {
+    console.log(1);
     await fs.writeFile(srcFile, fileConstent, (err) => {
         if (err) {
             console.error(err);
@@ -17,6 +18,7 @@ beforeEach(async () => {
 });
 
 test('copy one file relative', () => {
+    console.log(2);
     copy(srcFile, destFolder);
     const destFileContent = fs.readFileSync(
         `${destFolder}/${fileName}`,
@@ -27,6 +29,7 @@ test('copy one file relative', () => {
 });
 
 afterEach(async () => {
+    console.log(3);
     await fs.unlink(srcFile, (err) => {
         if (err) {
             console.error(err);
