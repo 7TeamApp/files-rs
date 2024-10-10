@@ -283,6 +283,8 @@ jobs:
           - name: Install pnpm
             if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.package-manager == 'pnpm' }}
             uses: pnpm/action-setup@v4.0.0
+            with:
+                version: latest
           - name: Check pnpm
             if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.package-manager == 'pnpm' }}
             run: pnpm -v
