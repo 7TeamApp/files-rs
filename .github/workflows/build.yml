@@ -307,9 +307,9 @@ jobs:
                     npx vitest run
           - name: ls
             run: |
-                ecgo ls
+                echo ls
                 ls
-                ecgo 'ls node'
+                echo 'ls node'
                 ls node
           - name: Test bindings
             if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
