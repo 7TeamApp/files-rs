@@ -77,14 +77,14 @@
         "vitest": "2.1.2"
     },
     "overrides": {
-        "rollup": "@rollup/wasm-node"
+        "rollup": "npm:@rollup/wasm-node"
     },
     "resolutions": {
-        "rollup": "@rollup/wasm-node"
+        "rollup": "npm:@rollup/wasm-node"
     },
     "pnpm": {
         "overrides": {
-            "rollup": "@rollup/wasm-node"
+            "rollup": "npm:@rollup/wasm-node"
         }
     },
     "engines": {
