@@ -168,8 +168,10 @@ switch (platform) {
                 isLocalFileExist = existsSync(
                     join(__dirname, '../node/files-rs.darwin-x64.node')
                 );
+                console.log(isLocalFileExist);
                 try {
                     if (isLocalFileExist) {
+                        console.log('you are here');
                         nativeBinding = require('../node/files-rs.darwin-x64.node');
                     } else {
                         nativeBinding = require('files-rs-darwin-x64');
