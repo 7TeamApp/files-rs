@@ -454,4 +454,11 @@ if (!nativeBinding) {
     throw new Error('Failed to load native binding');
 }
 
-export default nativeBinding;
+interface fs{
+    jsCopySingle(pathStr: string, outDirStr: string): void
+    jsCopyMulty(pathsStr: string[], outDirStr: string): void
+    jsCopyGlobSingle(pattern: string, outDirStr: string): void
+    jsCopyGlobMulty(patterns: string[], outDirStr: string): void
+}
+
+export default nativeBinding as fs;

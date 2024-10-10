@@ -68,7 +68,7 @@
     },
     "scripts": {
         "artifacts": "napi artifacts",
-        "build": "napi build node --platform --release --strip",
+        "build": "napi build node --js false --platform --release --strip",
         "_postbuild": "tsup && bun ./scripts/posttsup.ts",
         "build:debug": "napi build node --platform",
         "prepublishOnly": "napi prepublish -t npm",
