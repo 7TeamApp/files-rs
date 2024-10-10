@@ -1,9 +1,4 @@
-import {
-    jsCopyGlobMulty,
-    jsCopyGlobSingle,
-    jsCopyMulty,
-    jsCopySingle
-} from './main';
+import fs from './main';
 
 /**
  * Copies files or directories from the specified source path(s) to the destination directory.
@@ -13,9 +8,9 @@ import {
  */
 export const copy = (path: string | string[], outDir: string) => {
     if (typeof path === 'string') {
-        jsCopySingle(path, outDir);
+        fs.jsCopySingle(path, outDir);
     } else if (Array.isArray(path)) {
-        jsCopyMulty(path, outDir);
+        fs.jsCopyMulty(path, outDir);
     } else {
         throw new Error('path must be string or array of strings');
     }
@@ -32,9 +27,9 @@ export const copyGlob = (
     outDir: string
 ) => {
     if (typeof pattern === 'string') {
-        jsCopyGlobSingle(pattern, outDir);
+        fs.jsCopyGlobSingle(pattern, outDir);
     } else if (Array.isArray(pattern)) {
-        jsCopyGlobMulty(pattern, outDir);
+        fs.jsCopyGlobMulty(pattern, outDir);
     } else {
         throw new Error('pattern must be string or array of strings');
     }
