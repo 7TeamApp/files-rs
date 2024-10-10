@@ -67,6 +67,14 @@
     "overrides": {
         "rollup": "npm:@rollup/wasm-node"
     },
+    "resolutions": {
+        "rollup": "npm:@rollup/wasm-node"
+    },
+    "pnpm": {
+        "overrides": {
+            "rollup": "npm:@rollup/wasm-node"
+        }
+    },
     "engines": {
         "node": ">= 10"
     },
