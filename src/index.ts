@@ -3,7 +3,7 @@ import {
     jsCopyGlobSingle,
     jsCopyMulty,
     jsCopySingle
-} from './main.js';
+} from './main';
 
 /**
  * Copies files or directories from the specified source path(s) to the destination directory.
