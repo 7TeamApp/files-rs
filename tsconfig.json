@@ -13,5 +13,6 @@
         "allowJs": true,
         "strict": true,
         "strictNullChecks": true
-    }
+    },
+    "include": ["bun"]
 }
