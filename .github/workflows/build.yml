@@ -291,7 +291,7 @@ jobs:
             # uses: oven-sh/setup-bun@v2.0.1
             # with:
             #     no-cache: true
-            run: npm i bun -g --no-optional
+            run: npm i bun -g --omit=optional
           - name: Check Bun
             if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
             run: |
