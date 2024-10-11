@@ -29,30 +29,36 @@ jobs:
                 settings:
                   - host: macos-latest
                     target: x86_64-apple-darwin
+                    architecture: x64
                     build: yarn build --target x86_64-apple-darwin
                   - host: windows-latest
-                    build: yarn build --target x86_64-pc-windows-msvc
                     target: x86_64-pc-windows-msvc
+                    architecture: x64
+                    build: yarn build --target x86_64-pc-windows-msvc
                   - host: windows-latest
-                    build: yarn build --target i686-pc-windows-msvc
                     target: i686-pc-windows-msvc
+                    build: yarn build --target i686-pc-windows-msvc
                   - host: ubuntu-latest
                     target: x86_64-unknown-linux-gnu
+                    architecture: x64
                     docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian
                     build: |
                         yarn add bun -g
                         yarn build --target x86_64-unknown-linux-gnu
                   - host: ubuntu-latest
                     target: x86_64-unknown-linux-musl
+                    architecture: x64
                     docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
                     build: |
                         yarn add bun -g
                         yarn build --target x86_64-unknown-linux-musl
                   - host: macos-latest
                     target: aarch64-apple-darwin
+                    architecture: aarch64
                     build: yarn build --target aarch64-apple-darwin
                   - host: ubuntu-latest
                     target: aarch64-unknown-linux-gnu
+                    architecture: aarch64
                     docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian-aarch64
                     build: |
                         yarn add bun -g
@@ -68,12 +74,14 @@ jobs:
                     build: yarn build --target armv7-unknown-linux-musleabihf
                   - host: ubuntu-latest
                     target: aarch64-linux-android
+                    architecture: aarch64
                     build: yarn build --target aarch64-linux-android
                   - host: ubuntu-latest
                     target: armv7-linux-androideabi
                     build: yarn build --target armv7-linux-androideabi
                   - host: ubuntu-latest
                     target: aarch64-unknown-linux-musl
+                    architecture: aarch64
                     docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
                     build: |-
                         set -e &&
@@ -81,6 +89,7 @@ jobs:
                         yarn build --target aarch64-unknown-linux-musl
                   - host: windows-latest
                     target: aarch64-pc-windows-msvc
+                    architecture: aarch64
                     build: yarn build --target aarch64-pc-windows-msvc
                   - host: ubuntu-latest
                     target: riscv64gc-unknown-linux-gnu
@@ -90,6 +99,7 @@ jobs:
                     build: yarn build --target riscv64gc-unknown-linux-gnu
                   - host: ubuntu-latest
                     target: x86_64-unknown-freebsd
+                    architecture: x86_64
                     build: |
                         sudo pkg install -y -f node npm
                         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --profile minimal --default-toolchain stable -y
@@ -141,7 +151,13 @@ jobs:
                     target/
                 key: ${{ matrix.settings.target }}-cargo-${{ matrix.settings.host }}
           - name: Install node
-            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && !matrix.settings.docker }}
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.settings.architecture && !matrix.settings.docker }}
+            uses: actions/setup-node@v4
+            with:
+                node-version: 20
+                architecture: ${{ matrix.settings.architecture }}
+          - name: Install node
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && !matrix.settings.architecture && !matrix.settings.docker }}
             uses: actions/setup-node@v4
             with:
                 node-version: 20
