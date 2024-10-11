@@ -1,0 +1,38 @@
+[package]
+edition = "2021"
+name = "files-rs"
+version = "0.0.0"
+description = "A native Node.js library written in Rust that adds functions for copying files"
+license = "MIT"
+keywords = [
+    "NodeJS",
+    "Node",
+    "NAPI",
+    "n-api",
+    "Copy",
+    "Glob",
+    "files",
+    "fs"
+]
+repository = "https://github.com/7TeamApp/files-rs"
+authors = [
+    "7TeamApp"
+]
+readme = "README.md"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+# Default enable napi4 feature, see https://nodejs.org/api/n-api.html#node-api-version-matrix
+napi = { version = "2.12.2", default-features = false, features = ["napi4"] }
+napi-derive = "2.12.2"
+glob = "0.3.1"
+anyhow = {version = "1.0.89", optional = true}
+
+[build-dependencies]
+napi-build = "2.0.1"
+
+[profile.release]
+lto = true
+strip = "symbols"

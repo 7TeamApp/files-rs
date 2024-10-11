@@ -1,0 +1,114 @@
+{
+    "files": {
+        "ignoreUnknown": false,
+        "ignore": [
+            "**/node_modules/**/*",
+            "**/dist/**/*",
+            "**/build/**/*",
+            "**/release/**/*",
+            "**/target/**/*",
+            "**/npm/**/*"
+        ]
+    },
+    "linter": {
+        "enabled": true,
+        "rules": {
+            "all": true,
+            "style": {
+                "noDefaultExport": "off"
+            },
+            "correctness": {
+                "noNodejsModules": "off",
+                "useImportExtensions": "off"
+            }
+        }
+    },
+    "formatter": {
+        "enabled": true,
+        "useEditorconfig": true,
+        "formatWithErrors": true
+    },
+    "organizeImports": {
+        "enabled": true
+    },
+    "javascript": {
+        "formatter": {
+            "enabled": true,
+            "quoteStyle": "single",
+            "jsxQuoteStyle": "single",
+            "trailingCommas": "none",
+            "semicolons": "always",
+            "arrowParentheses": "always"
+        },
+        "linter": {
+            "enabled": true
+        },
+        "parser": {
+            "unsafeParameterDecoratorsEnabled": true
+        }
+    },
+    "css": {
+        "parser": {
+            "cssModules": true
+        },
+        "formatter": {
+            "enabled": true
+        },
+        "linter": {
+            "enabled": true
+        }
+    },
+    "json": {
+        "formatter": {
+            "enabled": true
+        },
+        "linter": {
+            "enabled": true
+        }
+    },
+    "vcs": {
+        "enabled": true,
+        "clientKind": "git",
+        "useIgnoreFile": false,
+        "defaultBranch": "main"
+    },
+    "overrides": [
+        {
+            "include": ["./scripts/**/*"],
+            "linter": {
+                "rules": {
+                    "suspicious": {
+                        "noConsole": "off",
+                        "noConsoleLog": "off",
+                        "useAwait": "off"
+                    }
+                }
+            }
+        },
+        {
+            "include": ["./src/main.ts"],
+            "linter": {
+                "rules": {
+                    "suspicious": {
+                        "noConsole": "off",
+                        "noConsoleLog": "off",
+                        "noEmptyBlockStatements": "off"
+                    },
+                    "correctness": {
+                        "noUndeclaredDependencies": "off"
+                    }
+                }
+            }
+        },{
+            "include": ["./**/*.test.*", "./**/*.spec.*"],
+            "linter": {
+                "rules": {
+                    "suspicious": {
+                        "noConsole": "off",
+                        "noConsoleLog": "off"
+                    }
+                }
+            }
+        }
+    ]
+}

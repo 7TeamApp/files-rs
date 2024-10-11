@@ -1,0 +1,40 @@
+name: CI
+env:
+    APP_NAME: files-rs
+permissions:
+    contents: write
+    id-token: write
+'on':
+    push:
+        branches:
+            - x
+        tags-ignore:
+            - '**'
+        paths-ignore:
+            - '**/*.md'
+            - '**/LICENSE'
+            - '**/*.gitignore'
+            - '**/*.editorconfig'
+    pull_request: null
+defaults:
+    run:
+        shell: bash
+jobs:
+    Publish:
+        strategy:
+            fail-fast: false
+        name: Publish
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v4.2.1
+    Postpublish-test:
+        name: Postpublish-test
+        needs:
+            - Publish
+        strategy:
+            fail-fast: false
+        runs-on: ubuntu-latest
+        steps:
+          - name: Some
+            run: echo some

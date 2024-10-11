@@ -1,0 +1,326 @@
+name: CI
+env:
+    DEBUG: napi:*
+    APP_NAME: files-rs
+    MACOSX_DEPLOYMENT_TARGET: '10.13'
+permissions:
+    contents: write
+    id-token: write
+'on':
+    push:
+        branches:
+            - master
+        tags-ignore:
+            - '**'
+        paths-ignore:
+            - '**/*.md'
+            - '**/LICENSE'
+            - '**/*.gitignore'
+            - '**/*.editorconfig'
+    pull_request: null
+defaults:
+    run:
+        shell: bash
+jobs:
+    Build:
+        strategy:
+            fail-fast: false
+            matrix:
+                settings:
+                  - host: macos-latest
+                    target: x86_64-apple-darwin
+                    build: yarn build --target x86_64-apple-darwin
+                  - host: windows-latest
+                    build: yarn build --target x86_64-pc-windows-msvc
+                    target: x86_64-pc-windows-msvc
+                  - host: windows-latest
+                    build: yarn build --target i686-pc-windows-msvc
+                    target: i686-pc-windows-msvc
+                  - host: ubuntu-latest
+                    target: x86_64-unknown-linux-gnu
+                    docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian
+                    build: |
+                        yarn add bun -g
+                        yarn build --target x86_64-unknown-linux-gnu
+                  - host: ubuntu-latest
+                    target: x86_64-unknown-linux-musl
+                    docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
+                    build: |
+                        yarn add bun -g
+                        yarn build --target x86_64-unknown-linux-musl
+                  - host: macos-latest
+                    target: aarch64-apple-darwin
+                    build: yarn build --target aarch64-apple-darwin
+                  - host: ubuntu-latest
+                    target: aarch64-unknown-linux-gnu
+                    docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian-aarch64
+                    build: |
+                        yarn add bun -g
+                        yarn build --target aarch64-unknown-linux-gnu
+                  - host: ubuntu-latest
+                    target: armv7-unknown-linux-gnueabihf
+                    setup: |
+                        sudo apt-get update
+                        sudo apt-get install gcc-arm-linux-gnueabihf -y
+                    build: yarn build --target armv7-unknown-linux-gnueabihf
+                  - host: ubuntu-latest
+                    target: armv7-unknown-linux-musleabihf
+                    build: yarn build --target armv7-unknown-linux-musleabihf
+                  - host: ubuntu-latest
+                    target: aarch64-linux-android
+                    build: yarn build --target aarch64-linux-android
+                  - host: ubuntu-latest
+                    target: armv7-linux-androideabi
+                    build: yarn build --target armv7-linux-androideabi
+                  - host: ubuntu-latest
+                    target: aarch64-unknown-linux-musl
+                    docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
+                    build: |-
+                        set -e &&
+                        rustup target add aarch64-unknown-linux-musl &&
+                        yarn build --target aarch64-unknown-linux-musl
+                  - host: windows-latest
+                    target: aarch64-pc-windows-msvc
+                    build: yarn build --target aarch64-pc-windows-msvc
+                  - host: ubuntu-latest
+                    target: riscv64gc-unknown-linux-gnu
+                    setup: |
+                        sudo apt-get update
+                        sudo apt-get install gcc-riscv64-linux-gnu -y
+                    build: yarn build --target riscv64gc-unknown-linux-gnu
+                  - host: ubuntu-latest
+                    target: x86_64-unknown-freebsd
+                    build: |
+                        sudo pkg install -y -f node npm
+                        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --profile minimal --default-toolchain stable -y
+                        . "$HOME/.cargo/env"
+                        sudo npm i -g yarn
+                        yarn install
+                        yarn build
+        name: Build stable-${{ matrix.settings.target }}-node@20
+        runs-on: ${{ matrix.settings.host }}
+        env:
+            DEBUG: napi:*
+            RUSTUP_IO_THREADS: 1
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v4.2.1
+          - name: Init
+            if: ${{ matrix.settings.target == 'x86_64-unknown-freebsd' }}
+            uses: cross-platform-actions/action@v0.25.0
+            env:
+                DEBUG: napi:*
+                RUSTUP_IO_THREADS: 1
+            with:
+                shutdown_vm: false
+                operating_system: freebsd
+                architecture: x86-64
+                version: '14.1'
+                memory: 8G
+                cpu_count: 4
+                environment_variables: 'DEBUG RUSTUP_IO_THREADS'
+                shell: bash
+                run: ${{ matrix.settings.build }}
+          - name: Install rust-toolchain
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && !matrix.settings.docker }}
+            uses: dtolnay/rust-toolchain@stable
+            with:
+                toolchain: stable
+                targets: ${{ matrix.settings.target }}
+          - name: Check Cargo
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
+            run: cargo -V
+          - name: Cache cargo
+            uses: actions/cache@v4
+            with:
+                path: |
+                    ~/.cargo/registry/index/
+                    ~/.cargo/registry/cache/
+                    ~/.cargo/git/db/
+                    .cargo-cache
+                    target/
+                key: ${{ matrix.settings.target }}-cargo-${{ matrix.settings.host }}
+          - name: Install node
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && !matrix.settings.docker }}
+            uses: actions/setup-node@v4
+            with:
+                node-version: 20
+          - name: Check node
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
+            run: |
+                node -v
+                npm -v
+          - name: Check yarn
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
+            run: yarn -v
+          - name: Install Bun
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
+            uses: oven-sh/setup-bun@v2.0.1
+          - name: Check Bun
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
+            run: bun -v
+          - uses: goto-bus-stop/setup-zig@v2
+            if: ${{ matrix.settings.target == 'armv7-unknown-linux-gnueabihf' || matrix.settings.target == 'armv7-unknown-linux-musleabihf' }}
+            with:
+                version: 0.13.0
+          - name: Setup toolchain
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.settings.setup }}
+            run: ${{ matrix.settings.setup }}
+          - name: Setup node x86
+            if: ${{ matrix.settings.target == 'i686-pc-windows-msvc' }}
+            run: yarn config set supportedArchitectures.cpu "ia32"
+          - name: Install dependencies
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
+            run: bun i
+          - name: Install node x86
+            if: ${{ matrix.settings.target == 'i686-pc-windows-msvc' }}
+            uses: actions/setup-node@v4
+            with:
+                node-version: 20
+                architecture: x86
+          - name: Build in docker
+            if: ${{ matrix.settings.docker }}
+            uses: addnab/docker-run-action@v3
+            with:
+                image: ${{ matrix.settings.docker }}
+                options: '--user 0:0 -v ${{ github.workspace }}/.cargo-cache/git/db:/usr/local/cargo/git/db -v ${{ github.workspace }}/.cargo/registry/cache:/usr/local/cargo/registry/cache -v ${{ github.workspace }}/.cargo/registry/index:/usr/local/cargo/registry/index -v ${{ github.workspace }}:/build -w /build'
+                run: ${{ matrix.settings.build }}
+          - name: Build
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && !matrix.settings.docker }}
+            run: ${{ matrix.settings.build }}
+          - name: Upload artifact
+            uses: actions/upload-artifact@v4
+            with:
+                name: bindings-${{ matrix.settings.target }}
+                path: "node/${{ env.APP_NAME }}.*.node"
+                if-no-files-found: error
+    Postbuild:
+        name: Postbuild
+        needs:
+            - Build
+        strategy:
+            fail-fast: false
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v4.2.1
+          - name: Install node
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
+            uses: actions/setup-node@v4
+            with:
+                node-version: ${{ matrix.node }}
+                architecture: ${{ matrix.settings.architecture }}
+          - name: Check node
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
+            run: |
+                node -v
+                npm -v
+          - name: Install Bun
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
+            uses: oven-sh/setup-bun@v2.0.1
+          - name: Check Bun
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
+            run: bun -v
+          - name: Install dependencies
+            run: bun i
+          - name: Postbuild
+            run: bun run _postbuild
+          - name: Upload artifact
+            uses: actions/upload-artifact@v4
+            with:
+                name: bindings-dist
+                path: "dist/**/*"
+                if-no-files-found: error
+    Test:
+        name: Test ${{ matrix.settings.target }}-node@${{ matrix.node }}
+        needs:
+            - Postbuild
+        strategy:
+            fail-fast: false
+            matrix:
+                settings:
+                  - host: windows-latest
+                    target: x86_64-pc-windows-msvc
+                    architecture: x64
+                  - host: macos-latest
+                    target: aarch64-apple-darwin
+                    architecture: arm64
+                  - host: macos-latest
+                    target: x86_64-apple-darwin
+                    architecture: x64
+                  - host: ubuntu-latest
+                    target: x86_64-unknown-freebsd
+                    architecture: x86-64
+                    version: '14.1'
+                node:
+                    - 20
+        runs-on: ${{ matrix.settings.host }}
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v4.2.1
+          - name: Install node
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
+            uses: actions/setup-node@v4
+            with:
+                node-version: ${{ matrix.node }}
+                architecture: ${{ matrix.settings.architecture }}
+          - name: Check node
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
+            run: |
+                node -v
+                npm -v
+          - name: Install Bun
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
+            uses: oven-sh/setup-bun@v2.0.1
+          - name: Check Bun
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
+            run: bun -v
+          - name: Install dependencies
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
+            run: bun i
+          - name: Download node artifacts
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
+            uses: actions/download-artifact@v4
+            with:
+                name: bindings-${{ matrix.settings.target }}
+                path: 'node'
+          - name: Download dist artifacts
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
+            uses: actions/download-artifact@v4
+            with:
+                name: bindings-dist
+                path: 'dist'
+          - name: Init
+            if: ${{ matrix.settings.target == 'x86_64-unknown-freebsd' }}
+            uses: cross-platform-actions/action@v0.25.0
+            with:
+                shutdown_vm: false
+                operating_system: freebsd
+                architecture: ${{ matrix.settings.architecture }}
+                version: ${{ matrix.settings.version }}
+                memory: 8G
+                cpu_count: 4
+                shell: bash
+                run: |
+                    sudo pkg install -y -f node npm
+                    npm i
+                    npx vitest run
+          - name: ls
+            run: |
+                echo ls
+                ls
+                echo 'ls node'
+                ls node
+          - name: Test bindings
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
+            run: bun run test
+    Publish:
+        name: Publish
+        needs: 
+            - Test
+        strategy:
+            fail-fast: false
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v4.2.1

@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "target": "esnext",
+        "lib": ["esnext", "DOM"],
+        "module": "esnext",
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "paths": {
+            "files-rs": ["."]
+        },
+        "resolveJsonModule": true,
+        "typeRoots": ["**/types/**/*", "**/@types/**/*", "**/*.{ts,cts,mts}"],
+        "allowJs": true,
+        "strict": true,
+        "strictNullChecks": true
+    }
+}

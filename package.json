@@ -1,0 +1,86 @@
+{
+    "name": "files-rs",
+    "version": "0.0.0",
+    "description": "A native Node.js library written in Rust that adds functions for copying files",
+    "contributors": [
+        {
+            "name": "7TeamApp"
+        }
+    ],
+    "homepage": "https://github.com/7TeamApp/files-rs#readme",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/7TeamApp/files-rs.git"
+    },
+    "bugs": {
+        "url": "https://github.com/7TeamApp/files-rs/issues"
+    },
+    "keywords": ["rust", "napi", "rs", "copy", "glob", "files", "fs"],
+    "main": "dist/index.cjs",
+    "module": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/index.js",
+            "require": "./dist/index.cjs"
+        },
+        "./*": "./*"
+    },
+    "typesVersions": {
+        "*": {
+            "*": ["./dist/*", "./*"]
+        }
+    },
+    "napi": {
+        "name": "files-rs",
+        "triples": {
+            "additional": [
+                "aarch64-apple-darwin",
+                "aarch64-linux-android",
+                "aarch64-unknown-linux-gnu",
+                "aarch64-unknown-linux-musl",
+                "aarch64-pc-windows-msvc",
+                "armv7-unknown-linux-gnueabihf",
+                "armv7-unknown-linux-musleabihf",
+                "x86_64-unknown-linux-musl",
+                "x86_64-unknown-freebsd",
+                "i686-pc-windows-msvc",
+                "armv7-linux-androideabi",
+                "universal-apple-darwin",
+                "riscv64gc-unknown-linux-gnu"
+            ]
+        }
+    },
+    "type": "module",
+    "license": "MIT",
+    "devDependencies": {
+        "@biomejs/biome": "^1.9.3",
+        "@napi-rs/cli": "^2.18.4",
+        "@swc/core": "1.7.35",
+        "@types/bun": "^1.1.11",
+        "@types/node": "22.7.5",
+        "chalk": "^5.3.0",
+        "fast-glob": "^3.3.2",
+        "tsup": "^8.3.0",
+        "typescript": "5.6.3",
+        "vitest": "2.1.2"
+    },
+    "overrides": {
+        "rollup": "npm:@rollup/wasm-node"
+    },
+    "engines": {
+        "node": ">= 10"
+    },
+    "scripts": {
+        "artifacts": "napi artifacts",
+        "build": "napi build node --js false --platform --release --strip",
+        "_postbuild": "tsup && bun ./scripts/posttsup.ts",
+        "build:debug": "napi build node --platform",
+        "prepublishOnly": "napi prepublish -t npm",
+        "release": "bun run build && bun test && bun ./scripts/prepublish.ts",
+        "format": "biome check --write ./",
+        "test": "bun test",
+        "universal": "napi universal",
+        "version": "napi version"
+    }
+}
