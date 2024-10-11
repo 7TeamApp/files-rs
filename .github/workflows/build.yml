@@ -269,6 +269,8 @@ jobs:
             run: |
                 node -v
                 npm -v
+                node -p "process.platform"
+                node -p "process.arch"
           - name: Install Bun
             if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
             uses: oven-sh/setup-bun@v2.0.1
