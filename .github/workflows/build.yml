@@ -273,9 +273,10 @@ jobs:
                 node -p "process.arch"
           - name: Install Bun
             if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
-            uses: oven-sh/setup-bun@v2.0.1
-            with:
-                no-cache: true
+            # uses: oven-sh/setup-bun@v2.0.1
+            # with:
+            #     no-cache: true
+            run: npm i bun -g
           - name: Check Bun
             if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
             run: |
