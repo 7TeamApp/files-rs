@@ -165,24 +165,24 @@ switch (platform) {
         } catch {}
         switch (arch) {
             case 'x64': {
-                // isLocalFileExist = existsSync(
-                //     join(__dirname, '../node/files-rs.darwin-x64.node')
-                // );
+                isLocalFileExist = existsSync(
+                    join(__dirname, '../node/files-rs.darwin-x64.node')
+                );
                 console.log(isLocalFileExist);
                 try {
-                    nativeBinding = require('../node/files-rs.darwin-x64.node');
-                    // if (isLocalFileExist) {
-                    //     console.log('you are here');
-                    //     nativeBinding = require('../node/files-rs.darwin-x64.node');
-                    // } else {
-                    //     nativeBinding = require('files-rs-darwin-x64');
-                    // }
+                    if (isLocalFileExist) {
+                        console.log('you are here');
+                        nativeBinding = require('../node/files-rs.darwin-x64.node');
+                    } else {
+                        nativeBinding = require('files-rs-darwin-x64');
+                    }
                 } catch (e) {
                     loadError = e;
                 }
                 break;
             }
             case 'arm64': {
+                console.log('this is arm64');
                 isLocalFileExist = existsSync(
                     join(__dirname, '../node/files-rs.darwin-arm64.node')
                 );
