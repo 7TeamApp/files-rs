@@ -151,13 +151,7 @@ jobs:
                     target/
                 key: ${{ matrix.settings.target }}-cargo-${{ matrix.settings.host }}
           - name: Install node
-            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.settings.architecture && !matrix.settings.docker }}
-            uses: actions/setup-node@v4
-            with:
-                node-version: 20
-                architecture: ${{ matrix.settings.architecture }}
-          - name: Install node
-            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && !matrix.settings.architecture && !matrix.settings.docker }}
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && !matrix.settings.docker }}
             uses: actions/setup-node@v4
             with:
                 node-version: 20
