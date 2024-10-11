@@ -278,7 +278,10 @@ jobs:
                 no-cache: true
           - name: Check Bun
             if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
-            run: bun -v
+            run: |
+                bun -v
+                bun -e "console.log(process.platform)"
+                bun -e "console.log(process.arch)"
           - name: Install dependencies
             if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
             run: bun i
