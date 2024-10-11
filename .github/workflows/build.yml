@@ -272,6 +272,8 @@ jobs:
           - name: Install Bun
             if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
             uses: oven-sh/setup-bun@v2.0.1
+            with:
+                no-cache: true
           - name: Check Bun
             if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
             run: bun -v
