@@ -325,10 +325,10 @@ jobs:
                 run: |
                     sudo pkg install -y -f node npm
                     npm i
-                    npx run test
+                    npm run test
           - name: Test bindings
             if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.settings.target != 'x86_64-apple-darwin' }}
-            run: npx run test
+            run: npm run test
     Publish:
         name: Publish
         needs: 
