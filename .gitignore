@@ -2,4 +2,4 @@
 **/dist/**/*
 **/target/**/*
 **/node/**/*
-bun.lockb
+**/test_dist/**/*

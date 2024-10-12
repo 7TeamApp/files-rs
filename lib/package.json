@@ -1,0 +1,23 @@
+{
+    "name": "lib",
+    "exports": {
+        "./tester": {
+            "import": "./tester.mjs",
+            "require": "./tester.cjs",
+            "types": "./tester.d.ts"
+        },
+        "./bun": {
+            "import": "./bun.ts",
+            "require": "./bun.ts",
+            "types": "./bun.ts",
+            "default": "./bun.ts",
+            "node": null
+        },
+        "./*": "./*"
+    },
+    "typesVersions": {
+        "*": {
+            "*": ["./*"]
+        }
+    }
+}

@@ -9,7 +9,7 @@
             "files-rs": ["."]
         },
         "resolveJsonModule": true,
-        "typeRoots": ["**/types/**/*", "**/@types/**/*", "**/*.{ts,cts,mts}"],
+        "typeRoots": ["**/types/**/*", "**/@types/**/*", "**/*.{ts,cts,mts,d.ts,d.cts,d.mts}"],
         "allowJs": true,
         "strict": true,
         "strictNullChecks": true

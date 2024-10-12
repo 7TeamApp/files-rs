@@ -2,9 +2,9 @@
 // import { join } from 'node:path';
 // import { copy } from 'files-rs';
 // import tester from '../lib/tester';
-import type Tester from '../lib/tester_type';
-import tester from '../lib/tester';
-const { afterEach, beforeEach, expect, test }: Tester = tester as Tester;
+
+import tester from 'lib/tester';
+const { afterEach, beforeEach, expect, test } = tester;
 
 test('copy one file relative', () => {
     // console.log(2);
