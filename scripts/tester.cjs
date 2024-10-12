@@ -35,7 +35,7 @@ isComExist('bun').then(res=>{
                         exec('yarn exec vitest run', stdout);
                     }else{
                         console.log('using npm');
-                        exec('npm test', stdout);
+                        exec('npx vitest run', stdout);
                     }
                 })
             }
