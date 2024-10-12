@@ -326,12 +326,6 @@ jobs:
                     sudo pkg install -y -f node npm
                     npm i
                     npx vitest run
-          - name: ls
-            run: |
-                echo ls
-                ls
-                echo 'ls node'
-                ls node
           - name: Test bindings
             if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.settings.target != 'x86_64-apple-darwin' }}
             run: bun run test
