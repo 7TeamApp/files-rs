@@ -1,8 +1,8 @@
 import { basename, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import Bun from '../lib/bun';
 import chalk from 'chalk';
 import fg from 'fast-glob';
+import Bun from '../lib/bun';
 
 const cjsFilePaths = await fg('*.cjs', {
     ignore: ['chunk-*'],

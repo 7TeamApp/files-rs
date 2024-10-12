@@ -291,10 +291,10 @@ jobs:
             uses: oven-sh/setup-bun@v2.0.1
           - name: Install Bun
             if: ${{ matrix.settings.target == 'x86_64-apple-darwin' }}
-            uses: oven-sh/setup-bun@v2.0.1
-            with:
-                no-cache: true
-                bun-download-url: "https://github.com/oven-sh/bun/releases/latest/download/bun-darwin-x64.zip"
+            run: npm i bun -g --arch=x64
+            # uses: oven-sh/setup-bun@v2.0.1
+            # with:
+            #     no-cache: true
           - name: Check Bun
             if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
             run: |
