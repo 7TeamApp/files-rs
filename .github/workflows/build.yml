@@ -302,13 +302,11 @@ jobs:
             if: ${{ matrix.settings.target == 'x86_64-apple-darwin' }}
             run: npm i
           - name: Download node artifacts
-            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
             uses: actions/download-artifact@v4
             with:
                 name: bindings-${{ matrix.settings.target }}
                 path: 'node'
           - name: Download dist artifacts
-            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
             uses: actions/download-artifact@v4
             with:
                 name: bindings-dist
