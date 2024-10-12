@@ -335,8 +335,11 @@ jobs:
                 echo 'ls node'
                 ls node
           - name: Test bindings
-            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.settings.target != 'x86_64-apple-darwin' }}
             run: bun run test
+          - name: Test bindings
+            if: ${{ matrix.settings.target == 'x86_64-apple-darwin' }}
+            run: npx vitest run
     Publish:
         name: Publish
         needs: 
