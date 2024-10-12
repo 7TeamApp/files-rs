@@ -289,21 +289,18 @@ jobs:
           - name: Install Bun
             if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.settings.target != 'x86_64-apple-darwin' }}
             uses: oven-sh/setup-bun@v2.0.1
-          - name: Install Bun
-            if: ${{ matrix.settings.target == 'x86_64-apple-darwin' }}
-            run: npm i bun -g --arch=x64
-            # uses: oven-sh/setup-bun@v2.0.1
-            # with:
-            #     no-cache: true
           - name: Check Bun
-            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.settings.target != 'x86_64-apple-darwin' }}
             run: |
                 bun -v
                 bun -e "console.log(process.platform)"
                 bun -e "console.log(process.arch)"
           - name: Install dependencies
-            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.settings.target != 'x86_64-apple-darwin' }}
             run: bun i
+          - name: Install dependencies
+            if: ${{ matrix.settings.target == 'x86_64-apple-darwin' }}
+            run: npm i
           - name: Download node artifacts
             if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
             uses: actions/download-artifact@v4

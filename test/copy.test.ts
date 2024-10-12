@@ -46,5 +46,3 @@ test('copy one file relative', () => {
 //         }
 //     });
 // });
-
-export {}
