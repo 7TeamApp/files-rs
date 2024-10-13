@@ -338,7 +338,7 @@ jobs:
                     npm i
                     npm run test
           - name: Test bindings
-            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.settings.target != 'x86_64-apple-darwin' }}
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
             run: npm run test
     Publish:
         name: Publish
