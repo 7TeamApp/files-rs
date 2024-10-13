@@ -8,3 +8,6 @@ shell = "bun"
 
 [install.lockfile]
 print = "yarn"
+
+[test]
+root = "test"

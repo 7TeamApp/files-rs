@@ -12,9 +12,9 @@ export default (<Options>{
     clean: true,
     minify: false,
     skipNodeModulesBundle: true,
-    tsconfig: 'test/tsconfig.json',
+    tsconfig: 'test/tester.tsconfig.json',
     outExtension: (ctx) =>
-        ctx.format === 'cjs' ? { js: '.js' } : { js: '.mjs' },
+        ctx.format === 'cjs' ? { js: '.cjs' } : { js: '.mjs' },
     // esbuildPlugins: [
     //     babel({
     //         filter: /.*/,
@@ -31,6 +31,5 @@ export default (<Options>{
     //             ]
     //         }
     //     })
-    // ],
-    // noExternal: ['lib']
+    // ]
 });

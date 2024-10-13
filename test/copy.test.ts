@@ -3,7 +3,7 @@
 // import { copy } from 'files-rs';
 // import tester from '../lib/tester';
 
-import { afterEach, beforeEach, expect, test } from 'lib/tester';
+import {test, expect} from 'lib/tester';
 
 test('copy one file relative', () => {
     // console.log(2);
@@ -45,3 +45,5 @@ test('copy one file relative', () => {
 //         }
 //     });
 // });
+
+export {} 

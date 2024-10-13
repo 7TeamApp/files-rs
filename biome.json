@@ -110,7 +110,7 @@
                 }
             }
         },{
-            "include": ["./scripts/*.cjs"],
+            "include": ["./scripts/*.cjs", "./lib/**/*"],
             "linter": {
                 "rules": {
                     "suspicious": {
@@ -120,6 +120,9 @@
                     "complexity": {
                         "useArrowFunction": "off",
                         "noExcessiveCognitiveComplexity": "off"
+                    },
+                    "correctness": {
+                        "noInnerDeclarations": "off"
                     },
                     "style": {
                         "noVar": "off",

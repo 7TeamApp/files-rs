@@ -30,7 +30,7 @@ isComExist('1bun').then(function (res) {
                         cp.exec('pnpm vitest run --dir test', stdout);
                     } else {
                         cp.exec(
-                            'pnpm jest --rootDir test_dist',
+                            "pnpm jest --rootDir test_dist --testMatch '**/*.cjs'",
                             stdout
                         );
                     }
@@ -48,7 +48,7 @@ isComExist('1bun').then(function (res) {
                                     );
                                 } else {
                                     cp.exec(
-                                        'yarn jest --rootDir test_dist',
+                                        "yarn jest --rootDir test_dist --testMatch '**/*.cjs'",
                                         stdout
                                     );
                                 }
