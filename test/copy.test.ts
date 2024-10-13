@@ -3,8 +3,7 @@
 // import { copy } from 'files-rs';
 // import tester from '../lib/tester';
 
-import tester from 'lib/tester';
-const { afterEach, beforeEach, expect, test } = tester;
+import { afterEach, beforeEach, expect, test } from 'lib/tester';
 
 test('copy one file relative', () => {
     // console.log(2);
