@@ -9,44 +9,66 @@ function stdout(err, stdout, stderr) {
     console.log(stdout);
 }
 
-function isnComExist(cmd){
+function isComExist(cmd) {
     return new Promise(function (res) {
         cp.exec(cmd + '--help', function (err) {
-            res(Boolean(err));
+            res(!!err);
         });
     });
 }
 
-isnComExist('bun').then(function (res) {
+isComExist('bun').then(function (res) {
     if (res) {
         console.log('using bun');
         cp.exec('bun test .ts', stdout);
     } else {
-        isnComExist('pnpm').then(function (res) {
+        isComExist('pnpm').then(function (res) {
             if (res) {
                 console.log('using pnpm');
-                if(isnComExist('pnpm vitest')){
-                    cp.exec('pnpm jest --rootDir test_dist', stdout);
-                }else{
-                    cp.exec('pnpm vitest run --dir test', stdout);
-                }
+                isComExist('pnpm vitest').then(function (res) {
+                    if (res) {
+                        cp.exec('pnpm vitest run --dir test', stdout);
+                    } else {
+                        cp.exec(
+                            'pnpm jest --rootDir test_dist',
+                            stdout
+                        );
+                    }
+                });
             } else {
-                isnComExist('yarn').then(function (res) {
+                isComExist('yarn').then(function (res) {
                     if (res) {
                         console.log('using yarn');
-                        if(isnComExist('yarn exec vitest')){
-                            cp.exec('yarn exec jest --rootDir test_dist', stdout);
-                        }else{
-                            cp.exec('yarn exec vitest run --dir test', stdout);
-                        }
+                        isComExist('yarn exec vitest').then(
+                            function (res) {
+                                if (res) {
+                                    cp.exec(
+                                        'yarn exec vitest run --dir test',
+                                        stdout
+                                    );
+                                } else {
+                                    cp.exec(
+                                        'yarn exec jest --rootDir test_dist',
+                                        stdout
+                                    );
+                                }
+                            }
+                        );
                     } else {
                         console.log('using npm');
-                        if(isnComExist('npx vitest')){
-                            cp.exec('npx jest --rootDir test_dist', stdout);
-                        }else{
-                            cp.exec('npx vitest run --dir test', stdout);
-                        }
-                        
+                        isComExist('npx vitest').then(function (res) {
+                            if (res) {
+                                cp.exec(
+                                    'npx vitest run --dir test',
+                                    stdout
+                                );
+                            } else {
+                                cp.exec(
+                                    'npx jest --rootDir test_dist',
+                                    stdout
+                                );
+                            }
+                        });
                     }
                 });
             }

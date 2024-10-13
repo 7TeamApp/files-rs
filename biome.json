@@ -109,6 +109,24 @@
                     }
                 }
             }
+        },{
+            "include": ["./scripts/*.cjs"],
+            "linter": {
+                "rules": {
+                    "suspicious": {
+                        "noConsole": "off",
+                        "noConsoleLog": "off"
+                    },
+                    "complexity": {
+                        "useArrowFunction": "off",
+                        "noExcessiveCognitiveComplexity": "off"
+                    },
+                    "style": {
+                        "noVar": "off",
+                        "useTemplate": "off"
+                    }
+                }
+            }
         }
     ]
 }
