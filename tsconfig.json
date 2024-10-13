@@ -2,9 +2,10 @@
     "compilerOptions": {
         "target": "esnext",
         "lib": ["esnext", "DOM"],
-        "module": "esnext",
+        "module": "NodeNext",
         "moduleResolution": "NodeNext",
         "esModuleInterop": true,
+        "allowImportingTsExtensions": true,
         "paths": {
             "files-rs": ["."]
         },
@@ -13,6 +14,5 @@
         "allowJs": true,
         "strict": true,
         "strictNullChecks": true
-    },
-    "include": ["bun", "bun:test"]
+    }
 }
