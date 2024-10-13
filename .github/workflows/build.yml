@@ -341,7 +341,7 @@ jobs:
             run: |
                 echo "-------- . -------"
                 ls
-                echo "---" test_dist ---"
+                echo "--- test_dist ---"
                 ls test_dist
           - name: Test bindings
             if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
