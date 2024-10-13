@@ -96,6 +96,8 @@
         "release": "bun run build && bun test && bun ./scripts/prepublish.ts",
         "format": "biome check --write ./",
         "test": "node ./scripts/tester.cjs",
+        "vitest": "vitest",
+        "jest": "jest",
         "universal": "napi universal",
         "version": "napi version"
     }

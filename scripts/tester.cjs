@@ -4,7 +4,7 @@ function stdout(err, stdout, stderr) {
     if (err) {
         throw new Error(err.message);
     }
-    
+
     console.log(stderr);
     console.log(stdout);
 }
@@ -39,16 +39,16 @@ isComExist('bun').then(function (res) {
                 isComExist('yarn').then(function (res) {
                     if (res) {
                         console.log('using yarn');
-                        isComExist('yarn exec vitest').then(
+                        isComExist('yarn vitest').then(
                             function (res) {
                                 if (res) {
                                     cp.exec(
-                                        'yarn exec vitest run --dir test',
+                                        'yarn vitest run --dir test',
                                         stdout
                                     );
                                 } else {
                                     cp.exec(
-                                        'yarn exec jest --rootDir test_dist',
+                                        'yarn jest --rootDir test_dist',
                                         stdout
                                     );
                                 }
