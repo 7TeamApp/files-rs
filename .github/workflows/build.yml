@@ -306,7 +306,7 @@ jobs:
             run: bun i
           - name: Install dependencies
             if: ${{ matrix.settings.target == 'x86_64-apple-darwin' }}
-            run: npm i
+            run: yarn i
           - name: Download node artifacts
             uses: actions/download-artifact@v4
             with:
