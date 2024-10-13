@@ -3,10 +3,9 @@ var cp = require('node:child_process');
 function stdout(err, stdout, stderr) {
     if (err) {
         throw new Error(err.message);
-    }else if(stderr){
-        throw new Error(stderr);
     }
     
+    console.log(stderr);
     console.log(stdout);
 }
 
