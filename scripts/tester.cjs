@@ -11,8 +11,8 @@ function stdout(err, stdout, stderr) {
 
 function isComExist(cmd) {
     return new Promise(function (res) {
-        cp.exec(cmd + '--help', function (err) {
-            res(!!err);
+        cp.exec(cmd + ' --help', function (err) {
+            res(!err);
         });
     });
 }
