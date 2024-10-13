@@ -56,7 +56,7 @@ isComExist('1bun').then(function (res) {
                         );
                     } else {
                         console.log('using npm');
-                        isComExist('npx vitest').then(function (res) {
+                        isComExist('1npx vitest').then(function (res) {
                             if (res) {
                                 cp.exec(
                                     'npx vitest run --dir test',
