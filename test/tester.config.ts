@@ -3,7 +3,7 @@ import type { Options } from 'tsup';
 
 export default (<Options>{
     entryPoints: ['test/**/!(tester.config).ts'],
-    format: ['cjs', 'esm'],
+    format: ['cjs'],
     dts: false,
     cjsInterop: true,
     splitting: true,

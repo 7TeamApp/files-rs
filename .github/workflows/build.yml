@@ -306,7 +306,7 @@ jobs:
             run: yarn -v
           - name: Install dependencies
             if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.settings.target != 'x86_64-apple-darwin' }}
-            run: bun i
+            run: yarn install
           - name: Install dependencies
             if: ${{ matrix.settings.target == 'x86_64-apple-darwin' }}
             run: yarn install
