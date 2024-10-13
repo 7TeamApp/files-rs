@@ -64,7 +64,7 @@ isComExist('1bun').then(function (res) {
                                 );
                             } else {
                                 cp.exec(
-                                    'npx jest --rootDir test_dist',
+                                    "npx jest --rootDir test_dist --testMatch '**/*.cjs'",
                                     stdout
                                 );
                             }
