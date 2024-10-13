@@ -246,6 +246,12 @@ jobs:
                 name: bindings-dist
                 path: "dist/**/*"
                 if-no-files-found: error
+          - name: Upload artifact
+            uses: actions/upload-artifact@v4
+            with:
+                name: bindings-test-dist
+                path: "test_dist/**/*"
+                if-no-files-found: error
     Test:
         name: Test ${{ matrix.settings.target }}-node@${{ matrix.node }}
         needs:
@@ -311,6 +317,11 @@ jobs:
             with:
                 name: bindings-dist
                 path: 'dist'
+          - name: Download test_dist artifacts
+            uses: actions/download-artifact@v4
+            with:
+                name: bindings-test-dist
+                path: 'test_dist'
           - name: Init
             if: ${{ matrix.settings.target == 'x86_64-unknown-freebsd' }}
             uses: cross-platform-actions/action@v0.25.0
