@@ -351,7 +351,7 @@ jobs:
             run: npm run test
           - name: Test bindings
             if: ${{ matrix.settings.target == 'x86_64-unknown-linux-gnu' }}
-            run: docker run --rm -v $(pwd):/build -w /build node:${{ matrix.node }}-slim bun run test
+            run: docker run --rm -v $(pwd):/build -w /build node:${{ matrix.node }}-slim npm run test
     Publish:
         name: Publish
         needs: 
