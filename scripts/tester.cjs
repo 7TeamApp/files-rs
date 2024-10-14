@@ -17,12 +17,12 @@ function isComExist(cmd) {
     });
 }
 
-isComExist('1bun').then(function (res) {
+isComExist('bun').then(function (res) {
     if (res) {
         console.log('using bun');
         cp.exec('bun test .ts', stdout);
     } else {
-        isComExist('1pnpm').then(function (res) {
+        isComExist('pnpm').then(function (res) {
             if (res) {
                 console.log('using pnpm');
                 isComExist('pnpm vitest').then(function (res) {
@@ -36,7 +36,7 @@ isComExist('1bun').then(function (res) {
                     }
                 });
             } else {
-                isComExist('1yarn').then(function (res) {
+                isComExist('yarn').then(function (res) {
                     if (res) {
                         console.log('using yarn');
                         isComExist('yarn vitest').then(
