@@ -298,6 +298,9 @@ jobs:
           - name: Install Bun
             if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.settings.target != 'x86_64-apple-darwin' }}
             uses: oven-sh/setup-bun@v2.0.1
+          - name: Install Bun
+            if: ${{ matrix.settings.target == 'x86_64-unknown-linux-gnu' }}
+            run: bun add -D bun
           - name: Check Bun
             if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.settings.target != 'x86_64-apple-darwin' }}
             run: |
@@ -343,17 +346,12 @@ jobs:
                     sudo pkg install -y -f node npm
                     npm i
                     npm run test
-          - name: ls
-            run: | 
-                ls
-                echo '-----------------'
-                ls build
           - name: Test bindings
             if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.settings.target != 'x86_64-unknown-linux-gnu' }}
             run: npm run test
           - name: Test bindings
             if: ${{ matrix.settings.target == 'x86_64-unknown-linux-gnu' }}
-            run: docker run --rm -v $(pwd):/build -w /build node:${{ matrix.node }}-slim yarn test
+            run: docker run --rm -v $(pwd):/build -w /build node:${{ matrix.node }}-slim bun run test
     Publish:
         name: Publish
         needs: 
