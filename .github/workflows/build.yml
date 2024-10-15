@@ -277,7 +277,7 @@ jobs:
                     target: x86_64-unknown-linux-musl
                     architecture: x64
                   - host: ubuntu-latest
-                    target: arch64-unknown-linux-gnu
+                    target: aarch64-unknown-linux-gnu
                     architecture: arm64
                 node:
                     - 20
@@ -286,13 +286,13 @@ jobs:
           - name: Checkout
             uses: actions/checkout@v4.2.1
           - name: Install node
-            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.settings.target != 'arch64-unknown-linux-gnu' }}
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.settings.target != 'aarch64-unknown-linux-gnu' }}
             uses: actions/setup-node@v4.0.4
             with:
                 node-version: ${{ matrix.node }}
                 architecture: ${{ matrix.settings.architecture }}
           - name: Check node
-            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.settings.target != 'arch64-unknown-linux-gnu' }}
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.settings.target != 'aarch64-unknown-linux-gnu' }}
             run: |
                 node -v
                 npm -v
@@ -322,7 +322,7 @@ jobs:
                 yarn config set supportedArchitectures.libc "musl"
                 yarn install
           - name: Install dependencies
-            if: ${{ matrix.settings.target == 'arch64-unknown-linux-gnu' }}
+            if: ${{ matrix.settings.target == 'aarch64-unknown-linux-gnu' }}
             run: |
                 yarn config set supportedArchitectures.cpu "arm64"
                 yarn config set supportedArchitectures.libc "glibc"
@@ -358,12 +358,12 @@ jobs:
                     npm i
                     npm run test
           - name: Init
-            if: ${{ matrix.settings.target == 'arch64-unknown-linux-gnu' }}
+            if: ${{ matrix.settings.target == 'aarch64-unknown-linux-gnu' }}
             uses: docker/setup-qemu-action@v3
             with:
                 platforms: ${{ matrix.settings.architecture }}
           - name: Init step 2
-            if: ${{ matrix.settings.target == 'arch64-unknown-linux-gnu' }}
+            if: ${{ matrix.settings.target == 'aarch64-unknown-linux-gnu' }}
             run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
           - name: Test bindings
             if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.settings.target != 'x86_64-unknown-linux-gnu' && matrix.settings.target != 'x86_64-unknown-linux-musl' }}
@@ -375,7 +375,7 @@ jobs:
             if: ${{ matrix.settings.target == 'x86_64-unknown-linux-musl' }}
             run: docker run --rm -v $(pwd):/build -w /build node:${{ matrix.node }}-alpine npm run test
           - name: Test bindings
-            if: ${{ matrix.settings.target == 'arch64-unknown-linux-gnu' }}
+            if: ${{ matrix.settings.target == 'aarch64-unknown-linux-gnu' }}
             uses: addnab/docker-run-action@v3
             with:
                 image: node:${{ matrix.node }}-slim
