@@ -1,12 +1,7 @@
 var cp = require('node:child_process');
 
-function stdout(err, stdout, stderr) {
-    if (err) {
-        throw new Error(err.message);
-    }
-
-    console.log(stderr);
-    console.log(stdout);
+function throwErr(){
+    throw new Error();
 }
 
 function ifComExist(tester, fnTrue, fnFalse) {
@@ -24,82 +19,79 @@ function ifComExist(tester, fnTrue, fnFalse) {
     });
 }
 
-function std(tester) {
-    switch (tester) {
-        case 'bun': {
-            break;
+function exec(cmd, callbackErr, callback) {
+    cp.exec(cmd, function stdout(err, stdout, stderr) {
+        if (err) {
+            console.error(err.message);
+            return callbackErr ? callbackErr() : null;
         }
-        case 'pnpm': {
-            break;
-        }
-        case 'yarn': {
-            break;
-        }
-        case 'npm': {
-            break;
-        }
-        default: {
-            throw new Error('incorrect tester');
-        }
-    }
+
+        console.log(stderr);
+        console.log(stdout);
+        return callback ? callback() : null;
+    });
 }
 
-function exec(cmd) {
-    cp.exec(cmd, stdout);
+function runBun(){
+    ifComExist('bun', runBunTest, runPnpm);
 }
 
-ifComExist(
-    'bun',
-    function () {
-        exec('bun test .ts');
-    },
-    function () {
-        ifComExist(
-            'pnpm',
-            function () {
-                ifComExist(
-                    'pnpm vitest',
-                    function () {
-                        exec('pnpm vitest run --dir test');
-                    },
-                    function () {
-                        exec(
-                            "pnpm jest --rootDir test_dist --testMatch '**/*.cjs'"
-                        );
-                    }
-                );
-            },
-            function () {
-                ifComExist(
-                    'yarn',
-                    function () {
-                        ifComExist(
-                            'yarn vitest',
-                            function () {
-                                exec('yarn vitest run --dir test');
-                            },
-                            function () {
-                                exec(
-                                    "yarn jest --rootDir test_dist --testMatch '**/*.cjs'"
-                                );
-                            }
-                        );
-                    },
-                    function () {
-                        ifComExist(
-                            'npx vitest',
-                            function () {
-                                cp.exec('npx vitest run --dir test');
-                            },
-                            function () {
-                                cp.exec(
-                                    "npx jest --rootDir test_dist --testMatch '**/*.cjs'"
-                                );
-                            }
-                        );
-                    }
-                );
-            }
-        );
-    }
-);
+function runPnpm(){
+    ifComExist(
+        'pnpm',
+        function () {
+            ifComExist('pnpm vitest', runPnpmVitest, runPnpmJest);
+        },
+        runYarn
+    );
+}
+
+function runYarn(){
+    ifComExist(
+        'yarn',
+        function () {
+            ifComExist(
+                'yarn vitest',
+                runYarnVitest,
+                runYarnJest
+            );
+        },
+        function () {
+            ifComExist(
+                'npx vitest',
+                runNpxVitest,
+                runNpxJest
+            );
+        }
+    );
+}
+
+function runBunTest() {
+    exec('bun test .ts', throwErr);
+}
+
+function runPnpmVitest() {
+    exec('pnpm vitest run --dir test', runPnpmJest);
+}
+
+function runPnpmJest() {
+    exec("pnpm jest --rootDir test_dist --testMatch '**/*.cjs'", throwErr);
+}
+
+function runYarnVitest() {
+    exec('yarn vitest run --dir test', runYarnJest);
+}
+
+function runYarnJest() {
+    exec("yarn jest --rootDir test_dist --testMatch '**/*.cjs'", throwErr);
+}
+
+function runNpxVitest() {
+    exec('npx vitest run --dir test', runNpxJest);
+}
+
+function runNpxJest() {
+    exec("npx jest --rootDir test_dist --testMatch '**/*.cjs'", throwErr);
+}
+
+runBun();
