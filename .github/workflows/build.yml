@@ -380,7 +380,7 @@ jobs:
             with:
                 image: node:${{ matrix.node }}-slim
                 options: '--platform linux/${{ matrix.settings.architecture }} -v ${{ github.workspace }}:/build -w /build'
-                run: npm run test
+                run: npx jest --rootDir test_dist --testMatch '**/*.cjs'
     Publish:
         name: Publish
         needs: 
