@@ -380,7 +380,7 @@ jobs:
             with:
                 image: node:${{ matrix.node }}-slim
                 options: '--platform linux/${{ matrix.settings.architecture }} -v ${{ github.workspace }}:/build -w /build'
-                run: npx run test
+                run: npm run test
     Publish:
         name: Publish
         needs: 
