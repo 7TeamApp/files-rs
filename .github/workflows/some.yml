@@ -21,7 +21,8 @@ jobs:
     container-test-job:
         runs-on: ubuntu-latest
         container:
-            image: node:20-slim
+            image: multiarch/qemu-user-static
+            options: '--rm --privileged --reset -p yes'
         steps:
           - name: 
             run: |
