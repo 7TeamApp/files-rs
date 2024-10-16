@@ -22,7 +22,6 @@ jobs:
         runs-on: ubuntu-latest
         container:
             image: multiarch/qemu-user-static
-            options: '--rm --privileged --reset -p yes'
         steps:
           - name: 
             run: |
