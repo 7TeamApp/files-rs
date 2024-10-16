@@ -26,7 +26,7 @@ jobs:
                 - 80
             volumes:
                 - my_docker_volume:/volume_mount
-            options: --cpus 1
+            options: '--platform linux/arm64 -v ${{ github.workspace }}:/build -w /build'
         steps:
           - name: 
             run: |
