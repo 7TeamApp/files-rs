@@ -18,20 +18,17 @@ defaults:
   run:
     shell: bash
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    container:
-      image: arm64v8/ubuntu
-    steps:
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Check architecture
-        run: uname -m
-      - name: Install dependencies
-        run: |
-          apt-get update && apt-get install -y curl
-          curl --version
-      - name: Run your build or tests
-        run: |
-            uname -m
-            ldd --version
+    container-test-job:
+        runs-on: ubuntu-latest
+        container:
+            image: node:18
+            env:
+                NODE_ENV: development
+            ports:
+                - 80
+            volumes:
+                - my_docker_volume:/volume_mount
+            options: --cpus 1
+        steps:
+          - name: Check for dockerenv file
+            run: (ls /.dockerenv && echo Found dockerenv) || (echo No dockerenv)
