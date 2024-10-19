@@ -358,12 +358,12 @@ jobs:
                     npm i
                     npm run test
           - name: Init
-            if: ${{ matrix.settings.target == 'aarch64-unknown-linux-gnu' }}
+            if: ${{ matrix.settings.architecture == 'arm64' && matrix.settings.host != 'macos-latest' }}
             uses: docker/setup-qemu-action@v3
             with:
                 platforms: ${{ matrix.settings.architecture }}
           - name: Init step 2
-            if: ${{ matrix.settings.target == 'aarch64-unknown-linux-gnu' }}
+            if: ${{ matrix.settings.architecture == 'arm64' && matrix.settings.host != 'macos-latest' }}
             run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
           - name: Test bindings
             if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.settings.target != 'x86_64-unknown-linux-gnu' && matrix.settings.target != 'x86_64-unknown-linux-musl' }}
@@ -379,8 +379,13 @@ jobs:
             uses: addnab/docker-run-action@v3
             with:
                 image: node:${{ matrix.node }}-slim
-                options: '--platform linux/${{ matrix.settings.architecture }} -v ${{ github.workspace }}:/build -w /build'
-                run: npm run test
+                options: '--platform linux/${{ matrix.settings.architecture }} --rm -v ${{ github.workspace }}:/build -w /build'
+                run: |
+                    node -v
+                    npm -v
+                    node -p "process.platform"
+                    node -p "process.arch"
+                    npm run test
     Publish:
         name: Publish
         needs: 
