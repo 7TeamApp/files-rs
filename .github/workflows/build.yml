@@ -285,6 +285,21 @@ jobs:
         steps:
           - name: Checkout
             uses: actions/checkout@v4.2.1
+          - name: Download node artifacts
+            uses: actions/download-artifact@v4
+            with:
+                name: bindings-${{ matrix.settings.target }}
+                path: 'node'
+          - name: Download dist artifacts
+            uses: actions/download-artifact@v4
+            with:
+                name: bindings-dist
+                path: 'dist'
+          - name: Download test_dist artifacts
+            uses: actions/download-artifact@v4
+            with:
+                name: bindings-test-dist
+                path: 'test_dist'
           - name: Install node
             if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.settings.target != 'aarch64-unknown-linux-gnu' }}
             uses: actions/setup-node@v4.0.4
@@ -299,10 +314,10 @@ jobs:
                 node -p "process.platform"
                 node -p "process.arch"
           - name: Install Bun
-            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.settings.target != 'x86_64-apple-darwin' }}
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
             uses: oven-sh/setup-bun@v2.0.1
           - name: Check Bun
-            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.settings.target != 'x86_64-apple-darwin' }}
+            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
             run: |
                 bun -v
                 bun -e "console.log(process.platform)"
@@ -327,21 +342,6 @@ jobs:
                 yarn config set supportedArchitectures.cpu "${{ matrix.settings.architecture }}"
                 yarn config set supportedArchitectures.libc "glibc"
                 yarn install
-          - name: Download node artifacts
-            uses: actions/download-artifact@v4
-            with:
-                name: bindings-${{ matrix.settings.target }}
-                path: 'node'
-          - name: Download dist artifacts
-            uses: actions/download-artifact@v4
-            with:
-                name: bindings-dist
-                path: 'dist'
-          - name: Download test_dist artifacts
-            uses: actions/download-artifact@v4
-            with:
-                name: bindings-test-dist
-                path: 'test_dist'
           - name: Init
             if: ${{ matrix.settings.target == 'x86_64-unknown-freebsd' }}
             uses: cross-platform-actions/action@v0.25.0
@@ -381,10 +381,12 @@ jobs:
                 image: node:${{ matrix.node }}-slim
                 options: '--platform linux/${{ matrix.settings.architecture }} --rm -v ${{ github.workspace }}:/build -w /build'
                 run: |
+                    uname -m
                     node -v
                     npm -v
                     node -p "process.platform"
                     node -p "process.arch"
+                    ldd --version
                     npm run test
     Publish:
         name: Publish
