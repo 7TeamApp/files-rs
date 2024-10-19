@@ -261,7 +261,7 @@ jobs:
                     os: windows
                     version: latest
                     target: x86_64-pc-windows-msvc
-                    architecture: x86_64
+                    architecture: x64
                     lib: msvc
                   - host: macos-latest
                     os: macos
@@ -272,24 +272,24 @@ jobs:
                     os: macos
                     version: latest
                     target: x86_64-apple-darwin
-                    architecture: x86_64
+                    architecture: x64
                   - host: ubuntu-latest
                     os: freebsd
                     version: '14.1'
                     target: x86_64-unknown-freebsd
-                    architecture: x86-64
+                    architecture: x64
                   - host: ubuntu-latest
                     os: linux
                     version: latest
                     target: x86_64-unknown-linux-gnu
-                    architecture: x86_64
+                    architecture: x64
                     lib: gnu
                   - host: ubuntu-latest
                     os: linux
                     version: latest
                     target: x86_64-unknown-linux-musl
                     lib: musl
-                    architecture: x86_64
+                    architecture: x64
                   - host: ubuntu-latest
                     os: linux
                     version: latest
