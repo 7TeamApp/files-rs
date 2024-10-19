@@ -285,7 +285,7 @@ jobs:
                     architecture: x64
                     lib: gnu
                   - host: ubuntu-latest
-                    os: linux
+                    os: alpine
                     version: latest
                     target: x86_64-unknown-linux-musl
                     lib: musl
@@ -389,9 +389,12 @@ jobs:
             if: ${{ matrix.settings.target == 'x86_64-unknown-linux-gnu' }}
             uses: addnab/docker-run-action@v3
             with:
-                image: node:${{ matrix.node }}-slim
+                image: multiarch/ubuntu-core
                 options: '--platform linux/${{ matrix.settings.architecture }} --rm -v ${{ github.workspace }}:/build -w /build'
                 run: |
+                    apt update
+                    curl -fsSL https://deb.nodesource.com/setup_20 | -E bash -
+                    apt install -y nodejs
                     uname -m
                     node -v
                     npm -v
@@ -403,9 +406,12 @@ jobs:
             if: ${{ matrix.settings.target == 'x86_64-unknown-linux-musl' }}
             uses: addnab/docker-run-action@v3
             with:
-                image: node:${{ matrix.node }}-alpine
+                image: multiarch/alpine
                 options: '--platform linux/${{ matrix.settings.architecture }} --rm -v ${{ github.workspace }}:/build -w /build'
                 run: |
+                    apt update
+                    curl -fsSL https://deb.nodesource.com/setup_20 | -E bash -
+                    apt install -y nodejs
                     uname -m
                     node -v
                     npm -v
@@ -417,9 +423,12 @@ jobs:
             if: ${{ matrix.settings.target == 'aarch64-unknown-linux-gnu' }}
             uses: addnab/docker-run-action@v3
             with:
-                image: node:${{ matrix.node }}-slim
-                options: '--platform linux/${{ matrix.settings.architecture }} --rm -v ${{ github.workspace }}:/build -w /build'
+                image: multiarch/ubuntu-core
+                options: '--platform ${{ matrix.settings.os }}/${{ matrix.settings.architecture }} --rm -v ${{ github.workspace }}:/build -w /build'
                 run: |
+                    apt update
+                    curl -fsSL https://deb.nodesource.com/setup_20 | -E bash -
+                    apt install -y nodejs
                     uname -m
                     node -v
                     npm -v
