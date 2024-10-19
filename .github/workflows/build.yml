@@ -258,27 +258,44 @@ jobs:
             matrix:
                 settings:
                   - host: windows-latest
+                    os: windows
+                    version: latest
                     target: x86_64-pc-windows-msvc
-                    architecture: x64
+                    architecture: x86_64
+                    lib: msvc
                   - host: macos-latest
+                    os: macos
+                    version: latest
                     target: aarch64-apple-darwin
                     architecture: arm64
                   - host: macos-latest
+                    os: macos
+                    version: latest
                     target: x86_64-apple-darwin
-                    architecture: x64
+                    architecture: x86_64
                   - host: ubuntu-latest
+                    os: freebsd
+                    version: '14.1'
                     target: x86_64-unknown-freebsd
                     architecture: x86-64
-                    version: '14.1'
                   - host: ubuntu-latest
+                    os: linux
+                    version: latest
                     target: x86_64-unknown-linux-gnu
-                    architecture: x64
+                    architecture: x86_64
+                    lib: gnu
                   - host: ubuntu-latest
+                    os: linux
+                    version: latest
                     target: x86_64-unknown-linux-musl
-                    architecture: x64
+                    lib: musl
+                    architecture: x86_64
                   - host: ubuntu-latest
+                    os: linux
+                    version: latest
                     target: aarch64-unknown-linux-gnu
                     architecture: arm64
+                    lib: gnu
                 node:
                     - 20
         runs-on: ${{ matrix.settings.host }}
@@ -363,7 +380,7 @@ jobs:
             with:
                 platforms: ${{ matrix.settings.architecture }}
           - name: Init step 2
-            if: ${{ matrix.settings.architecture == 'arm64' && matrix.settings.host != 'macos-latest' }}
+            if: ${{ matrix.settings.architecture == 'arm64' && matrix.settings.os == 'linux' }}
             run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
           - name: Test bindings
             if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.settings.target != 'x86_64-unknown-linux-gnu' && matrix.settings.target != 'x86_64-unknown-linux-musl' }}
