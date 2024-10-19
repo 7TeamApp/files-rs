@@ -32,12 +32,10 @@ function exec(cmd, callbackErr, callback) {
 }
 
 function runBun(){
-    console.log('using bun');
     ifComExist('bun', runBunTest, runPnpm);
 }
 
 function runPnpm(){
-    console.log('using pnpm');
     ifComExist(
         'pnpm',
         function () {
@@ -48,7 +46,6 @@ function runPnpm(){
 }
 
 function runYarn(){
-    console.log('using yarn');
     ifComExist(
         'yarn',
         function () {

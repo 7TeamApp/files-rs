@@ -373,7 +373,7 @@ jobs:
             uses: addnab/docker-run-action@v3
             with:
                 image: node:${{ matrix.node }}-slim
-                options: '--rm -v ${{ github.workspace }}:/build -w /build'
+                options: '--platform linux/${{ matrix.settings.architecture }} --rm -v ${{ github.workspace }}:/build -w /build'
                 run: |
                     uname -m
                     node -v
@@ -387,7 +387,7 @@ jobs:
             uses: addnab/docker-run-action@v3
             with:
                 image: node:${{ matrix.node }}-alpine
-                options: '--rm -v ${{ github.workspace }}:/build -w /build'
+                options: '--platform linux/${{ matrix.settings.architecture }} --rm -v ${{ github.workspace }}:/build -w /build'
                 run: |
                     uname -m
                     node -v
