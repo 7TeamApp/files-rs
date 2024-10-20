@@ -383,7 +383,7 @@ jobs:
             with:
                 shell: bash
                 image: "${{ matrix.settings.os }}:${{ matrix.settings.version }}"
-                options: '--platform ${{ matrix.settings.os }}/${{ matrix.settings.architecture }} --rm -v ${{ github.workspace }}:/build -w /build'
+                options: '--platform linux/${{ matrix.settings.architecture }} --rm -v ${{ github.workspace }}:/build -w /build'
                 run: |
                     apt update
                     curl -fsSL https://deb.nodesource.com/setup_${{ matrix.node }}.x | -E bash -
