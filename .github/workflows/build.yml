@@ -382,18 +382,22 @@ jobs:
           - name: Init step 2
             if: ${{ matrix.settings.architecture != 'x64' && matrix.settings.os != 'macos' && matrix.settings.os != 'windows' }}
             run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+          - name: Check os
+            run: |
+                uname -m
+                ldd --version
           - name: Test bindings
-            if: ${{ matrix.settings.os != 'freebsd' && matrix.settings.target != 'x86_64-unknown-linux-musl' }}
+            if: ${{ matrix.settings.os != 'freebsd' && matrix.settings.lib != 'musl' }}
             run: npm run test
           - name: Test bindings
-            if: ${{ matrix.settings.target == 'x86_64-unknown-linux-musl' }}
+            if: ${{ matrix.settings.lib == 'musl' }}
             uses: addnab/docker-run-action@v3
             with:
-                image: multiarch/alpine
+                image: "${{ matrix.settings.os }}:${{ matrix.settings.version }}"
                 options: '--platform linux/${{ matrix.settings.architecture }} --rm -v ${{ github.workspace }}:/build -w /build'
                 run: |
                     apt update
-                    curl -fsSL https://deb.nodesource.com/setup_20 | -E bash -
+                    curl -fsSL https://deb.nodesource.com/setup_${{ matrix.node }}.x | -E bash -
                     apt install -y nodejs
                     uname -m
                     node -v
@@ -410,7 +414,7 @@ jobs:
                 options: '--platform ${{ matrix.settings.os }}/${{ matrix.settings.architecture }} --rm -v ${{ github.workspace }}:/build -w /build'
                 run: |
                     apt update
-                    curl -fsSL https://deb.nodesource.com/setup_20 | -E bash -
+                    curl -fsSL https://deb.nodesource.com/setup_${{ matrix.node }}.x | -E bash -
                     apt install -y nodejs
                     uname -m
                     node -v
