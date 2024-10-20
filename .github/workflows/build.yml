@@ -279,7 +279,7 @@ jobs:
                     target: x86_64-unknown-freebsd
                     architecture: x64
                   - host: ubuntu-latest
-                    os: linux
+                    os: ubuntu
                     version: latest
                     target: x86_64-unknown-linux-gnu
                     architecture: x64
@@ -291,7 +291,7 @@ jobs:
                     lib: musl
                     architecture: x64
                   - host: ubuntu-latest
-                    os: linux
+                    os: ubuntu
                     version: latest
                     target: aarch64-unknown-linux-gnu
                     architecture: arm64
@@ -317,48 +317,36 @@ jobs:
             with:
                 name: bindings-test-dist
                 path: 'test_dist'
+          - name: Check os
+            if: ${{ matrix.settings.architecture == 'x64' && (matrix.settings.lib == 'gnu' || matrix.settings.os == 'windows' || matrix.settings.os == 'macos') }}
+            run: |
+                uname -m
+                ldd --version
           - name: Install node
-            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.settings.target != 'aarch64-unknown-linux-gnu' }}
+            if: ${{ matrix.settings.os != 'freebsd' && matrix.settings.architecture != 'x64' }}
             uses: actions/setup-node@v4.0.4
             with:
                 node-version: ${{ matrix.node }}
                 architecture: ${{ matrix.settings.architecture }}
           - name: Check node
-            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.settings.target != 'aarch64-unknown-linux-gnu' }}
+            if: ${{ matrix.settings.os != 'freebsd' && matrix.settings.architecture != 'x64' }}
             run: |
                 node -v
                 npm -v
                 node -p "process.platform"
                 node -p "process.arch"
           - name: Install Bun
-            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
+            if: ${{ matrix.settings.os != 'freebsd' && matrix.settings.architecture != 'x64' }}
             uses: oven-sh/setup-bun@v2.0.1
           - name: Check Bun
-            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' }}
+            if: ${{ matrix.settings.os != 'freebsd' && matrix.settings.architecture != 'x64' }}
             run: |
                 bun -v
                 bun -e "console.log(process.platform)"
                 bun -e "console.log(process.arch)"
-          - name: Check yarn
-            if: ${{ matrix.settings.target == 'x86_64-apple-darwin' }}
-            run: yarn -v
           - name: Install dependencies
-            if: ${{ matrix.settings.target != 'x86_64-unknown-freebsd' && matrix.settings.target != 'x86_64-apple-darwin' }}
+            if: ${{ matrix.settings.os != 'freebsd' && matrix.settings.architecture != 'x64' }}
             run: bun i
-          - name: Install dependencies
-            if: ${{ matrix.settings.target == 'x86_64-apple-darwin' }}
-            run: yarn install
-          - name: Install dependencies
-            if: ${{ matrix.settings.target == 'x86_64-unknown-linux-musl' }}
-            run: |
-                yarn config set supportedArchitectures.libc "musl"
-                yarn install
-          - name: Install dependencies
-            if: ${{ matrix.settings.target == 'aarch64-unknown-linux-gnu' }}
-            run: |
-                yarn config set supportedArchitectures.cpu "${{ matrix.settings.architecture }}"
-                yarn config set supportedArchitectures.libc "glibc"
-                yarn install
           - name: Init
             if: ${{ matrix.settings.os == 'freebsd' }}
             uses: cross-platform-actions/action@v0.25.0
@@ -380,48 +368,47 @@ jobs:
             with:
                 platforms: ${{ matrix.settings.architecture }}
           - name: Init step 2
-            if: ${{ matrix.settings.architecture != 'x64' && matrix.settings.os != 'macos' && matrix.settings.os != 'windows' }}
+            if: ${{ matrix.settings.architecture != 'x64' && matrix.settings.os != 'macos' && matrix.settings.os != 'windows' && matrix.settings.lib != 'musl' }}
             run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-          - name: Check os
-            run: |
-                uname -m
-                ldd --version
           - name: Test bindings
-            if: ${{ matrix.settings.os != 'freebsd' && matrix.settings.lib != 'musl' }}
+            if: ${{ matrix.settings.os != 'freebsd' && matrix.settings.architecture != 'x64' }}
             run: npm run test
           - name: Test bindings
             if: ${{ matrix.settings.lib == 'musl' }}
             uses: addnab/docker-run-action@v3
             with:
+                shell: bash
                 image: "${{ matrix.settings.os }}:${{ matrix.settings.version }}"
-                options: '--platform linux/${{ matrix.settings.architecture }} --rm -v ${{ github.workspace }}:/build -w /build'
-                run: |
-                    apt update
-                    curl -fsSL https://deb.nodesource.com/setup_${{ matrix.node }}.x | -E bash -
-                    apt install -y nodejs
-                    uname -m
-                    node -v
-                    npm -v
-                    node -p "process.platform"
-                    node -p "process.arch"
-                    ldd --version
-                    npm run test
-          - name: Test bindings
-            if: ${{ matrix.settings.target == 'aarch64-unknown-linux-gnu' }}
-            uses: addnab/docker-run-action@v3
-            with:
-                image: multiarch/ubuntu-core
                 options: '--platform ${{ matrix.settings.os }}/${{ matrix.settings.architecture }} --rm -v ${{ github.workspace }}:/build -w /build'
                 run: |
                     apt update
                     curl -fsSL https://deb.nodesource.com/setup_${{ matrix.node }}.x | -E bash -
                     apt install -y nodejs
                     uname -m
+                    ldd --version
                     node -v
                     npm -v
                     node -p "process.platform"
                     node -p "process.arch"
+                    npm i -g
+                    npm run test
+          - name: Test bindings
+            if: ${{ matrix.settings.lib == 'gnu' && matrix.settings.architecture != 'x64'  }}
+            uses: addnab/docker-run-action@v3
+            with:
+                image: "${{ matrix.settings.os }}:${{ matrix.settings.version }}"
+                options: '--platform ${{ matrix.settings.os }}/${{ matrix.settings.architecture }} --rm -v ${{ github.workspace }}:/build -w /build'
+                run: |
+                    apt update
+                    curl -fsSL https://deb.nodesource.com/setup_${{ matrix.node }}.x | -E bash -
+                    apt install -y nodejs
+                    uname -m
                     ldd --version
+                    node -v
+                    npm -v
+                    node -p "process.platform"
+                    node -p "process.arch"
+                    npm i -g
                     npm run test
     Publish:
         name: Publish
