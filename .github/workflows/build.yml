@@ -394,7 +394,7 @@ jobs:
                     npm -v
                     node -p "process.platform"
                     node -p "process.arch"
-                    npm i -g
+                    npm i -f
                     npm run test
           - name: Test bindings
             if: ${{ matrix.settings.os == 'alpine' && matrix.settings.architecture == 'x64' }}
@@ -409,7 +409,7 @@ jobs:
                     npm -v
                     node -p "process.platform"
                     node -p "process.arch"
-                    npm i -g
+                    npm i -f
                     npm run test
             
     Publish:
