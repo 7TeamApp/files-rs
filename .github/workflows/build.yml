@@ -340,10 +340,10 @@ jobs:
                 node -p "process.platform"
                 node -p "process.arch"
           - name: Install Bun
-            if: ${{ matrix.settings.os != 'freebsd' && matrix.settings.architecture != 'x64' }}
+            if: ${{ matrix.settings.os != 'freebsd' && matrix.settings.architecture == 'x64' }}
             uses: oven-sh/setup-bun@v2.0.1
           - name: Check Bun
-            if: ${{ matrix.settings.os != 'freebsd' && matrix.settings.architecture != 'x64' }}
+            if: ${{ matrix.settings.os != 'freebsd' && matrix.settings.architecture == 'x64' }}
             run: |
                 bun -v
                 bun -e "console.log(process.platform)"
