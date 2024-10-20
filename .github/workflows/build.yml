@@ -327,13 +327,13 @@ jobs:
             run: |
                 uname -m
           - name: Install node
-            if: ${{ matrix.settings.os != 'freebsd' && matrix.settings.architecture != 'x64' }}
+            if: ${{ matrix.settings.os != 'freebsd' && matrix.settings.architecture == 'x64' }}
             uses: actions/setup-node@v4.0.4
             with:
                 node-version: ${{ matrix.node }}
                 architecture: ${{ matrix.settings.architecture }}
           - name: Check node
-            if: ${{ matrix.settings.os != 'freebsd' && matrix.settings.architecture != 'x64' }}
+            if: ${{ matrix.settings.os != 'freebsd' && matrix.settings.architecture == 'x64' }}
             run: |
                 node -v
                 npm -v
