@@ -107,7 +107,7 @@ jobs:
                         sudo npm i -g yarn
                         yarn install
                         yarn build
-        name: Build stable-${{ matrix.settings.target }}-node@20
+        name: Build ${{ matrix.settings.target }}-node@20
         runs-on: ${{ matrix.settings.host }}
         env:
             DEBUG: napi:*
@@ -318,10 +318,14 @@ jobs:
                 name: bindings-test-dist
                 path: 'test_dist'
           - name: Check os
-            if: ${{ matrix.settings.architecture == 'x64' && (matrix.settings.lib == 'gnu' || matrix.settings.os == 'windows' || matrix.settings.os == 'macos') }}
+            if: ${{ matrix.settings.architecture == 'x64' && (matrix.settings.lib == 'gnu' || matrix.settings.os == 'windows' ) }}
             run: |
                 uname -m
                 ldd --version
+          - name: Check os
+            if: ${{ matrix.settings.os == 'macos' }}
+            run: |
+                uname -m
           - name: Install node
             if: ${{ matrix.settings.os != 'freebsd' && matrix.settings.architecture != 'x64' }}
             uses: actions/setup-node@v4.0.4
