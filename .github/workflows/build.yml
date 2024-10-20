@@ -397,10 +397,9 @@ jobs:
                     npm i -g
                     npm run test
           - name: Test bindings
-            if: ${{ matrix.settings.lib != 'gnu' && matrix.settings.os == 'alpine' && matrix.settings.architecture == 'x64' }}
+            if: ${{ matrix.settings.os == 'alpine' && matrix.settings.architecture == 'x64' }}
             uses: addnab/docker-run-action@v3
             with:
-                shell: bash
                 image: "node:${{ matrix.node }}-alpine"
                 options: '--platform linux/amd64 --rm -v ${{ github.workspace }}:/build -w /build'
                 run: |
