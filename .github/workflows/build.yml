@@ -378,7 +378,7 @@ jobs:
             if: ${{ matrix.settings.os != 'freebsd' && matrix.settings.architecture == 'x64' && matrix.settings.lib != 'musl' }}
             run: npm run test
           - name: Test bindings
-            if: ${{ (matrix.settings.architecture != 'x64' || matrix.settings.lib != 'gnu') && matrix.settings.os != 'macos' && matrix.settings.os != 'windows' && matrix.settings.os != 'freebsd' }}
+            if: ${{ (matrix.settings.architecture != 'x64' || matrix.settings.lib != 'gnu') && matrix.settings.os == 'ubuntu' }}
             uses: addnab/docker-run-action@v3
             with:
                 shell: bash
@@ -396,6 +396,23 @@ jobs:
                     node -p "process.arch"
                     npm i -g
                     npm run test
+          - name: Test bindings
+            if: ${{ (matrix.settings.architecture != 'x64' || matrix.settings.lib != 'gnu') && matrix.settings.os == 'alpine' }}
+            uses: addnab/docker-run-action@v3
+            with:
+                shell: bash
+                image: "node:${{ matrix.node }}-alpine"
+                options: '--platform linux/${{ matrix.settings.architecture }} --rm -v ${{ github.workspace }}:/build -w /build'
+                run: |
+                    uname -m
+                    ldd --version
+                    node -v
+                    npm -v
+                    node -p "process.platform"
+                    node -p "process.arch"
+                    npm i -g
+                    npm run test
+            
     Publish:
         name: Publish
         needs: 
