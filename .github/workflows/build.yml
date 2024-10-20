@@ -349,7 +349,7 @@ jobs:
                 bun -e "console.log(process.platform)"
                 bun -e "console.log(process.arch)"
           - name: Install dependencies
-            if: ${{ matrix.settings.os != 'freebsd' && matrix.settings.architecture != 'x64' }}
+            if: ${{ matrix.settings.os != 'freebsd' && matrix.settings.architecture == 'x64' }}
             run: bun i
           - name: Init
             if: ${{ matrix.settings.os == 'freebsd' }}
