@@ -382,7 +382,7 @@ jobs:
             uses: addnab/docker-run-action@v3
             with:
                 image: "node:${{ matrix.node }}-slim"
-                options: '--platform linux/arm64v8 --rm -v ${{ github.workspace }}:/build -w /build'
+                options: '--platform linux/arm64 --rm -v ${{ github.workspace }}:/build -w /build'
                 run: |
                     uname -m
                     ldd --version
