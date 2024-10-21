@@ -268,7 +268,7 @@ jobs:
                     version: latest
                     target: aarch64-apple-darwin
                     architecture: aarch64
-                  - host: macos-latest-large
+                  - host: macos-13
                     os: macos
                     version: latest
                     target: x86_64-apple-darwin
