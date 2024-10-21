@@ -318,7 +318,7 @@ jobs:
                 name: bindings-test-dist
                 path: 'test_dist'
           - name: Check os
-            if: ${{ matrix.settings.architecture == 'x64' && (matrix.settings.lib == 'gnu' || matrix.settings.os == 'windows' ) }}
+            if: ${{ (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && (matrix.settings.lib == 'gnu' || matrix.settings.os == 'windows' ) }}
             run: |
                 uname -m
                 ldd --version
@@ -327,29 +327,29 @@ jobs:
             run: |
                 uname -m
           - name: Install node
-            if: ${{ matrix.settings.os != 'freebsd' && matrix.settings.architecture == 'x64' && matrix.settings.lib != 'musl' }}
+            if: ${{ matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
             uses: actions/setup-node@v4.0.4
             with:
                 node-version: ${{ matrix.node }}
                 architecture: ${{ matrix.settings.architecture }}
           - name: Check node
-            if: ${{ matrix.settings.os != 'freebsd' && matrix.settings.architecture == 'x64' && matrix.settings.lib != 'musl' }}
+            if: ${{ matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
             run: |
                 node -v
                 npm -v
                 node -p "process.platform"
                 node -p "process.arch"
           - name: Install Bun
-            if: ${{ matrix.settings.os != 'freebsd' && matrix.settings.architecture == 'x64' && matrix.settings.lib != 'musl' }}
+            if: ${{ matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
             uses: oven-sh/setup-bun@v2.0.1
           - name: Check Bun
-            if: ${{ matrix.settings.os != 'freebsd' && matrix.settings.architecture == 'x64' && matrix.settings.lib != 'musl' }}
+            if: ${{ matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
             run: |
                 bun -v
                 bun -e "console.log(process.platform)"
                 bun -e "console.log(process.arch)"
           - name: Install dependencies
-            if: ${{ matrix.settings.os != 'freebsd' && matrix.settings.architecture == 'x64' && matrix.settings.lib != 'musl' }}
+            if: ${{ matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
             run: bun i
           - name: Init
             if: ${{ matrix.settings.os == 'freebsd' }}
@@ -375,7 +375,7 @@ jobs:
             if: ${{ matrix.settings.architecture != 'x64' && matrix.settings.os != 'macos' && matrix.settings.os != 'windows' && matrix.settings.lib != 'musl' }}
             run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
           - name: Test bindings
-            if: ${{ matrix.settings.os != 'freebsd' && matrix.settings.architecture == 'x64' && matrix.settings.lib != 'musl' }}
+            if: ${{ matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
             run: npm run test
           - name: Test bindings
             if: ${{ matrix.settings.os == 'ubuntu' && matrix.settings.architecture == 'aarch64' }}
