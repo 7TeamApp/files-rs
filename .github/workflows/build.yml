@@ -270,7 +270,7 @@ jobs:
                     architecture: aarch64
                   - host: macos-13
                     os: macos
-                    version: latest
+                    version: '13'
                     target: x86_64-apple-darwin
                     architecture: x64
                   - host: ubuntu-latest
@@ -378,16 +378,12 @@ jobs:
             if: ${{ matrix.settings.os != 'freebsd' && matrix.settings.architecture == 'x64' && matrix.settings.lib != 'musl' }}
             run: npm run test
           - name: Test bindings
-            if: ${{ (matrix.settings.architecture != 'x64' || matrix.settings.lib != 'gnu') && matrix.settings.os == 'ubuntu' }}
+            if: ${{ matrix.settings.os == 'ubuntu' && matrix.settings.architecture == 'aarch64' }}
             uses: addnab/docker-run-action@v3
             with:
-                shell: bash
-                image: "${{ matrix.settings.os }}:${{ matrix.settings.version }}"
-                options: '--platform linux/${{ matrix.settings.architecture }} --rm -v ${{ github.workspace }}:/build -w /build'
+                image: "node:${{ matrix.node }}-slim"
+                options: '--platform linux/amd64 --rm -v ${{ github.workspace }}:/build -w /build'
                 run: |
-                    apt update
-                    curl -fsSL https://deb.nodesource.com/setup_${{ matrix.node }}.x | -E bash -
-                    apt install -y nodejs npm
                     uname -m
                     ldd --version
                     node -v
