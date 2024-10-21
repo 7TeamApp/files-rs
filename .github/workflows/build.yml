@@ -267,7 +267,7 @@ jobs:
                     os: macos
                     version: latest
                     target: aarch64-apple-darwin
-                    architecture: aarch64
+                    architecture: arm64
                   - host: macos-13
                     os: macos
                     version: '13'
@@ -294,7 +294,7 @@ jobs:
                     os: ubuntu
                     version: latest
                     target: aarch64-unknown-linux-gnu
-                    architecture: aarch64
+                    architecture: arm64
                     lib: gnu
                 node:
                     - 20
@@ -378,7 +378,7 @@ jobs:
             if: ${{ matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
             run: npm run test
           - name: Test bindings
-            if: ${{ matrix.settings.os == 'ubuntu' && matrix.settings.architecture == 'aarch64' }}
+            if: ${{ matrix.settings.os == 'ubuntu' }}
             uses: addnab/docker-run-action@v3
             with:
                 image: "node:${{ matrix.node }}-slim"
