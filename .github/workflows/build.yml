@@ -393,7 +393,7 @@ jobs:
                     npm i -f
                     npm run test
           - name: Test bindings
-            if: ${{ matrix.settings.os == 'ubuntu' && matrix.settings.architecture == 'x64' }}
+            if: ${{ matrix.settings.os == 'ubuntu' && matrix.settings.architecture == 'x64' && matrix.settings.lib != 'gnu' }}
             uses: addnab/docker-run-action@v3
             with:
                 image: "node:${{ matrix.node }}-slim"
