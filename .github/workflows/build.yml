@@ -443,7 +443,7 @@ jobs:
                     npm i -f
                     npm run test
           - name: Test bindings
-            if: ${{ matrix.settings.lib == 'gnueabihf' && matrix.settings.architecture != 'armv7' }}
+            if: ${{ matrix.settings.lib == 'gnueabihf' && matrix.settings.architecture == 'armv7' }}
             uses: addnab/docker-run-action@v3
             with:
                 image: "node:${{ matrix.node }}-bullseye-slim"
