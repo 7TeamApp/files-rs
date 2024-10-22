@@ -302,6 +302,12 @@ jobs:
                     target: aarch64-unknown-linux-musl
                     lib: musl
                     architecture: arm64
+                  - host: ubuntu-latest
+                    os: --
+                    version: latest
+                    target: armv7-unknown-linux-gnueabihf
+                    lib: gnueabihf
+                    architecture: armv7
                 node:
                     - 20
         runs-on: ${{ matrix.settings.host }}
@@ -395,6 +401,7 @@ jobs:
                 image: "node:${{ matrix.node }}-slim"
                 options: '--platform linux/${{ matrix.settings.architecture }} --rm -v ${{ github.workspace }}:/build -w /build'
                 run: |
+                    set -e
                     uname -a
                     ldd --version
                     node -v
@@ -410,6 +417,7 @@ jobs:
                 image: "node:${{ matrix.node }}-alpine"
                 options: '--platform linux/amd64 --rm -v ${{ github.workspace }}:/build -w /build'
                 run: |
+                    set -e
                     uname -a
                     ldd --version
                     node -v
@@ -425,6 +433,23 @@ jobs:
                 image: "node:${{ matrix.node }}-alpine"
                 options: '--platform linux/${{ matrix.settings.architecture }} --rm -v ${{ github.workspace }}:/build -w /build'
                 run: |
+                    set -e
+                    uname -a
+                    ldd --version
+                    node -v
+                    npm -v
+                    node -p "process.platform"
+                    node -p "process.arch"
+                    npm i -f
+                    npm run test
+          - name: Test bindings
+            if: ${{ matrix.settings.lib == 'gnueabihf' && matrix.settings.architecture != 'armv7' }}
+            uses: addnab/docker-run-action@v3
+            with:
+                image: "node:${{ matrix.node }}-bullseye-slim"
+                options: '--platform linux/arm/v7 --rm -v ${{ github.workspace }}:/build -w /build'
+                run: |
+                    set -e
                     uname -a
                     ldd --version
                     node -v
