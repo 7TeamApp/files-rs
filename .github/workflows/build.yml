@@ -364,6 +364,11 @@ jobs:
                 shell: bash
                 run: |
                     sudo pkg install -y -f node npm
+                    uname -m
+                    node -v
+                    npm -v
+                    node -p "process.platform"
+                    node -p "process.arch"
                     npm i
                     npm run test
           - name: Init
