@@ -320,12 +320,12 @@ jobs:
           - name: Check os
             if: ${{ (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && (matrix.settings.lib == 'gnu' || matrix.settings.os == 'windows' ) }}
             run: |
-                uname -m
+                uname -a
                 ldd --version
           - name: Check os
             if: ${{ matrix.settings.os == 'macos' }}
             run: |
-                uname -m
+                uname -a
           - name: Install node
             if: ${{ matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
             uses: actions/setup-node@v4.0.4
@@ -364,7 +364,7 @@ jobs:
                 shell: bash
                 run: |
                     sudo pkg install -y -f node npm
-                    uname -m
+                    uname -a
                     node -v
                     npm -v
                     node -p "process.platform"
@@ -389,7 +389,7 @@ jobs:
                 image: "node:${{ matrix.node }}-slim"
                 options: '--platform linux/${{ matrix.settings.architecture }} --rm -v ${{ github.workspace }}:/build -w /build'
                 run: |
-                    uname -m
+                    uname -a
                     ldd --version
                     node -v
                     npm -v
@@ -404,7 +404,7 @@ jobs:
                 image: "node:${{ matrix.node }}-alpine"
                 options: '--platform linux/amd64 --rm -v ${{ github.workspace }}:/build -w /build'
                 run: |
-                    uname -m
+                    uname -a
                     ldd --version
                     node -v
                     npm -v
