@@ -250,7 +250,7 @@ jobs:
                 path: "test_dist/**/*"
                 if-no-files-found: error
     Test:
-        name: Test ${{ matrix.settings.target }}-node@${{ matrix.settings.node }}
+        name: Test ${{ matrix.settings.target }}-node@${{ matrix.node }}
         needs:
             - Postbuild
         strategy:
@@ -263,69 +263,59 @@ jobs:
                     target: x86_64-pc-windows-msvc
                     lib: msvc
                     architecture: x64
-                    node:
-                        - 20
+                  - host: windows-latest
+                    os: windows
+                    version: latest
+                    target: aarch64-pc-windows-msvc
+                    lib: msvc
+                    architecture: arm64
                   - host: macos-latest
                     os: macos
                     version: latest
                     target: aarch64-apple-darwin
                     architecture: arm64
-                    node:
-                        - 20
                   - host: macos-13
                     os: macos
                     version: '13'
                     target: x86_64-apple-darwin
                     architecture: x64
-                    node:
-                        - 20
                   - host: ubuntu-latest
                     os: freebsd
                     version: '14.1'
                     target: x86_64-unknown-freebsd
                     architecture: x64
-                    node:
-                        - 20
                   - host: ubuntu-latest
                     os: ubuntu
                     version: latest
                     target: x86_64-unknown-linux-gnu
                     lib: gnu
                     architecture: x64
-                    node:
-                        - 20
                   - host: ubuntu-latest
                     os: alpine
                     version: latest
                     target: x86_64-unknown-linux-musl
                     lib: musl
                     architecture: x64
-                    node:
-                        - 20
                   - host: ubuntu-latest
                     os: ubuntu
                     version: latest
                     target: aarch64-unknown-linux-gnu
                     lib: gnu
                     architecture: arm64
-                    node:
-                        - 20
                   - host: ubuntu-latest
                     os: alpine
                     version: latest
                     target: aarch64-unknown-linux-musl
                     lib: musl
                     architecture: arm64
-                    node:
-                        - 20
                   - host: ubuntu-latest
                     os: debian
                     version: latest
                     target: armv7-unknown-linux-gnueabihf
                     lib: "gnu debian"
                     architecture: armv7
-                    node:
-                        - 20
+                node:
+                    - 20
         runs-on: ${{ matrix.settings.host }}
         steps:
           - name: Checkout
@@ -346,7 +336,7 @@ jobs:
                 name: bindings-test-dist
                 path: 'test_dist'
           - name: Check os
-            if: ${{ (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && (matrix.settings.lib == 'gnu' || matrix.settings.os == 'windows' ) }}
+            if: ${{ (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos' || matrix.settings.os == 'windows') && (matrix.settings.lib == 'gnu' || matrix.settings.os == 'windows' ) }}
             run: |
                 uname -a
                 ldd --version
@@ -358,7 +348,7 @@ jobs:
             if: ${{ matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
             uses: actions/setup-node@v4.0.4
             with:
-                node-version: ${{ matrix.settings.node }}
+                node-version: ${{ matrix.node }}
                 architecture: ${{ matrix.settings.architecture }}
           - name: Check node
             if: ${{ matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
@@ -400,12 +390,12 @@ jobs:
                     npm i
                     npm run test
           - name: Init
-            if: ${{ matrix.settings.architecture != 'x64' && matrix.settings.os != 'macos' && matrix.settings.os != 'windows' }}
+            if: ${{ matrix.settings.architecture != 'x64' && matrix.settings.os != 'macos' }}
             uses: docker/setup-qemu-action@v3
             with:
                 platforms: ${{ matrix.settings.architecture }}
           - name: Init step 2
-            if: ${{ matrix.settings.architecture != 'x64' && matrix.settings.os != 'macos' && matrix.settings.os != 'windows' }}
+            if: ${{ matrix.settings.architecture != 'x64' && matrix.settings.os != 'macos' }}
             run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
           - name: Test bindings
             if: ${{ matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
@@ -414,7 +404,7 @@ jobs:
             if: ${{ matrix.settings.os == 'ubuntu' && matrix.settings.architecture != 'x64' }}
             uses: addnab/docker-run-action@v3
             with:
-                image: "node:${{ matrix.settings.node }}-slim"
+                image: "node:${{ matrix.node }}-slim"
                 options: '--platform linux/${{ matrix.settings.architecture }} --rm -v ${{ github.workspace }}:/build -w /build'
                 run: |
                     set -e
@@ -430,7 +420,7 @@ jobs:
             if: ${{ matrix.settings.os == 'alpine' && matrix.settings.architecture == 'x64' }}
             uses: addnab/docker-run-action@v3
             with:
-                image: "node:${{ matrix.settings.node }}-alpine"
+                image: "node:${{ matrix.node }}-alpine"
                 options: '--platform linux/amd64 --rm -v ${{ github.workspace }}:/build -w /build'
                 run: |
                     set -e
@@ -445,7 +435,7 @@ jobs:
             if: ${{ matrix.settings.os == 'alpine' && matrix.settings.architecture != 'x64' }}
             uses: addnab/docker-run-action@v3
             with:
-                image: "node:${{ matrix.settings.node }}-alpine"
+                image: "node:${{ matrix.node }}-alpine"
                 options: '--platform linux/${{ matrix.settings.architecture }} --rm -v ${{ github.workspace }}:/build -w /build'
                 run: |
                     set -e
@@ -460,7 +450,7 @@ jobs:
             if: ${{ matrix.settings.lib == 'gnu debian' && matrix.settings.architecture == 'armv7' }}
             uses: addnab/docker-run-action@v3
             with:
-                image: "node:${{ matrix.settings.node }}-bullseye-slim"
+                image: "node:${{ matrix.node }}-bullseye-slim"
                 options: '--platform linux/arm/v7 --rm -v ${{ github.workspace }}:/build -w /build'
                 run: |
                     set -e
@@ -472,7 +462,15 @@ jobs:
                     node -p "process.arch"
                     npm i -f
                     npm run test
-            
+          - name: Test bindings
+            if: ${{ matrix.settings.os == 'windows' && matrix.settings.architecture != 'x64' }}
+            uses: addnab/docker-run-action@v3
+            with:
+                image: "mcr.microsoft.com/windows"
+                options: '--platform linux/${{ matrix.settings.architecture }} --rm -v ${{ github.workspace }}:/build -w /build'
+                run: |
+                    set -e
+                    uname -a
     Publish:
         name: Publish
         needs: 
