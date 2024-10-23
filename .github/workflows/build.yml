@@ -265,7 +265,7 @@ jobs:
                     architecture: x64
                   - host: ubuntu-latest
                     os: windows
-                    version: latest
+                    version: 20H2
                     target: aarch64-pc-windows-msvc
                     lib: msvc
                     architecture: arm64
@@ -466,7 +466,7 @@ jobs:
             if: ${{ matrix.settings.os == 'windows' && matrix.settings.architecture != 'x64' }}
             uses: addnab/docker-run-action@v3
             with:
-                image: "mcr.microsoft.com/windows"
+                image: "mcr.microsoft.com/windows:${{ matrix.settings.version }}"
                 options: '--platform linux/${{ matrix.settings.architecture }} --rm -v ${{ github.workspace }}:/build -w /build'
                 run: |
                     set -e
