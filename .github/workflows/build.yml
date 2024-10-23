@@ -395,7 +395,10 @@ jobs:
             with:
                 platforms: ${{ matrix.settings.architecture }}
           - name: Init
+            uses: msys2/setup-msys2@v2
+          - name: Init step 2
             if: ${{ matrix.settings.architecture != 'x64' && matrix.settings.host == 'windows-latest' }}
+            shell: msys2 {0}
             run: pacman -S mingw-w64-ucrt-x86_64-qemu
           - name: Init step 2
             if: ${{ matrix.settings.architecture != 'x64' && matrix.settings.os != 'macos' }}
