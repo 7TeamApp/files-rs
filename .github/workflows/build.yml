@@ -395,11 +395,12 @@ jobs:
             with:
                 platforms: ${{ matrix.settings.architecture }}
           - name: Init
+            if: ${{ matrix.settings.architecture != 'x64' && matrix.settings.host == 'windows-latest' }}
             uses: msys2/setup-msys2@v2
           - name: Init step 2
             if: ${{ matrix.settings.architecture != 'x64' && matrix.settings.host == 'windows-latest' }}
             shell: msys2 {0}
-            run: pacman -S mingw-w64-ucrt-x86_64-qemu
+            run: pacman --help
           - name: Init step 2
             if: ${{ matrix.settings.architecture != 'x64' && matrix.settings.os != 'macos' }}
             run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
