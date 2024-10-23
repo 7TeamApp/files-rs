@@ -434,6 +434,7 @@ jobs:
                 run: |
                     set -e
                     uname -a
+                    /lib/ld-musl-x86_64.so.1 --version
                     node -v
                     npm -v
                     node -p "process.platform"
