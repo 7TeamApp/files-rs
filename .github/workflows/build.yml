@@ -263,7 +263,7 @@ jobs:
                     target: x86_64-pc-windows-msvc
                     lib: msvc
                     architecture: x64
-                  - host: windows-latest
+                  - host: ubuntu-latest
                     os: windows
                     version: latest
                     target: aarch64-pc-windows-msvc
