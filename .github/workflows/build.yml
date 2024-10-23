@@ -415,7 +415,7 @@ jobs:
             uses: addnab/docker-run-action@v3
             with:
                 image: "node:${{ matrix.node }}-alpine"
-                options: "--rm -v ${{ github.workspace }}:/build -w /build"
+                options: '--platform linux/amd64 --rm -v ${{ github.workspace }}:/build -w /build'
                 run: |
                     set -e
                     uname -a
@@ -434,7 +434,6 @@ jobs:
                 run: |
                     set -e
                     uname -a
-                    ldd --version
                     node -v
                     npm -v
                     node -p "process.platform"
