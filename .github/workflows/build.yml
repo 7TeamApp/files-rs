@@ -412,20 +412,7 @@ jobs:
                     npm run test
           - name: Test bindings
             if: ${{ matrix.settings.os == 'alpine' && matrix.settings.architecture == 'x64' }}
-            uses: addnab/docker-run-action@v3
-            with:
-                image: "node:${{ matrix.node }}-alpine"
-                options: '--rm -v $(pwd):/build -w /build node:${{ matrix.node }}-alpine'
-                run: |
-                    set -e
-                    uname -a
-                    ldd --version
-                    node -v
-                    npm -v
-                    node -p "process.platform"
-                    node -p "process.arch"
-                    npm i -f
-                    npm run test
+            run: docker run --rm -v $(pwd):/build -w /build node:${{ matrix.node }}-alpine set -e && npm i && npm run test
           - name: Test bindings
             if: ${{ matrix.settings.os == 'alpine' && matrix.settings.architecture != 'x64' }}
             uses: addnab/docker-run-action@v3
