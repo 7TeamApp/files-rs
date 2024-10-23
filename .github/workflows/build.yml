@@ -263,7 +263,7 @@ jobs:
                     target: x86_64-pc-windows-msvc
                     lib: msvc
                     architecture: x64
-                  - host: ubuntu-latest
+                  - host: windows-latest
                     os: windows
                     version: 20H2
                     target: aarch64-pc-windows-msvc
@@ -467,7 +467,7 @@ jobs:
             uses: addnab/docker-run-action@v3
             with:
                 image: "mcr.microsoft.com/windows:${{ matrix.settings.version }}"
-                options: '--platform linux/${{ matrix.settings.architecture }} --rm -v ${{ github.workspace }}:/build -w /build'
+                options: '--platform windows/${{ matrix.settings.architecture }} --rm -v ${{ github.workspace }}:/build -w /build'
                 run: |
                     set -e
                     uname -a
