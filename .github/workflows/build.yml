@@ -335,6 +335,12 @@ jobs:
             with:
                 name: bindings-test-dist
                 path: 'test_dist'
+          - name: Init
+            if: ${{ matrix.settings.architecture != 'x64' && matrix.settings.os == 'windows' }}
+            uses: sandervocke/setup-qemu-container@v1
+            with:
+                container: "dockurr/windows:${{ matrix.settings.version }}"
+                arch: ${{ matrix.settings.architecture }}
           - name: Check os
             if: ${{ (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos' || matrix.settings.os == 'windows') && (matrix.settings.lib == 'gnu' || matrix.settings.os == 'windows' ) }}
             run: |
@@ -344,12 +350,23 @@ jobs:
             if: ${{ matrix.settings.os == 'macos' }}
             run: |
                 uname -a
+          - name: Check os
+            if: ${{ matrix.settings.architecture != 'x64' || matrix.settings.os == 'windows'  }}
+            shell: run-in-container.sh {0}
+            run: |
+                uname -a
+                ldd --version
           - name: Install node
             if: ${{ matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
             uses: actions/setup-node@v4.0.4
             with:
                 node-version: ${{ matrix.node }}
                 architecture: ${{ matrix.settings.architecture }}
+          - name: Install node
+            if: ${{ matrix.settings.architecture != 'x64' || matrix.settings.os == 'windows'  }}
+            shell: run-in-container.sh {0}
+            run: |
+                echo x
           - name: Check node
             if: ${{ matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
             run: |
@@ -394,14 +411,8 @@ jobs:
             uses: docker/setup-qemu-action@v3
             with:
                 platforms: ${{ matrix.settings.architecture }}
-          - name: Init
-            if: ${{ matrix.settings.architecture != 'x64' && matrix.settings.os == 'windows' }}
-            uses: sandervocke/setup-qemu-container@v1
-            with:
-                container: "dockurr/windows:${{ matrix.settings.version }}"
-                arch: ${{ matrix.settings.architecture }}
           - name: Init step 2
-            if: ${{ matrix.settings.architecture != 'x64' && matrix.settings.os != 'macos' }}
+            if: ${{ matrix.settings.architecture != 'x64' && matrix.settings.os != 'macos' && matrix.settings.os != 'windows'  }}
             run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
           - name: Test bindings
             if: ${{ matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
@@ -470,13 +481,9 @@ jobs:
                     npm run test
           - name: Test bindings
             if: ${{ matrix.settings.os == 'windows' && matrix.settings.architecture != 'x64' }}
-            uses: addnab/docker-run-action@v3
-            with:
-                image: "mcr.microsoft.com/windows:${{ matrix.settings.version }}"
-                options: '--platform windows/${{ matrix.settings.architecture }} --rm -v ${{ github.workspace }}:/build -w /build'
-                run: |
-                    set -e
-                    uname -a
+            shell: run-in-container.sh {0}
+            run: |
+                npm run test
     Publish:
         name: Publish
         needs: 
