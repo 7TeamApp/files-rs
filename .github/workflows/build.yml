@@ -395,7 +395,7 @@ jobs:
             with:
                 platforms: ${{ matrix.settings.architecture }}
           - name: Inspect
-            run: docker manifest inspect mcr.microsoft.com/windows
+            run: docker manifest inspect mcr.microsoft.com/windows:20H2
           - name: Init
             if: ${{ matrix.settings.architecture != 'x64' && matrix.settings.os == 'windows' }}
             uses: sandervocke/setup-qemu-container@v1
