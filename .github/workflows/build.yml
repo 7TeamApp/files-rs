@@ -335,6 +335,13 @@ jobs:
             with:
                 name: bindings-test-dist
                 path: 'test_dist'
+          - uses: sandervocke/setup-qemu-container@v1
+            with:
+                container: alpine
+                arch: arm
+          - name: Print architecture from within container
+            shell: run-in-container.sh {0}
+            run: echo "Arch in container: $(uname -m)"
           - name: Init
             if: ${{ matrix.settings.architecture != 'x64' && matrix.settings.os == 'windows' }}
             uses: sandervocke/setup-qemu-container@v1
