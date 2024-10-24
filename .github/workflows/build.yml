@@ -342,7 +342,7 @@ jobs:
                 container: "dockurr/windows:${{ matrix.settings.version }}"
                 arch: ${{ matrix.settings.architecture }}
           - name: Check os
-            if: ${{ (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos' || matrix.settings.os == 'windows') && (matrix.settings.lib == 'gnu' || matrix.settings.os == 'windows' ) }}
+            if: ${{ (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos' ) && (matrix.settings.lib == 'gnu' || matrix.settings.os == 'windows' ) }}
             run: |
                 uname -a
                 ldd --version
