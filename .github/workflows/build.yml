@@ -390,10 +390,12 @@ jobs:
                     npm i
                     npm run test
           - name: Init
-            if: ${{ matrix.settings.architecture != 'x64' && matrix.settings.host == 'ubuntu-latest' }}
+            if: ${{ matrix.settings.architecture != 'x64' && matrix.settings.host == 'ubuntu-latest' && matrix.settings.os != 'windows' }}
             uses: docker/setup-qemu-action@v3
             with:
                 platforms: ${{ matrix.settings.architecture }}
+          - name: Inspect
+            run: docker manifest inspect mcr.microsoft.com/windows
           - name: Init
             if: ${{ matrix.settings.architecture != 'x64' && matrix.settings.os == 'windows' }}
             uses: sandervocke/setup-qemu-container@v1
