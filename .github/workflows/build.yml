@@ -398,8 +398,8 @@ jobs:
             if: ${{ matrix.settings.architecture != 'x64' && matrix.settings.os == 'windows' }}
             uses: sandervocke/setup-qemu-container@v1
             with:
-                container: alpine
-                arch: arm
+                container: "mcr.microsoft.com/windows:${{ matrix.settings.version }}"
+                arch: ${{ matrix.settings.architecture }}
           - name: Init step 2
             if: ${{ matrix.settings.architecture != 'x64' && matrix.settings.os != 'macos' }}
             run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
