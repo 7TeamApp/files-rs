@@ -263,7 +263,7 @@ jobs:
                     target: x86_64-pc-windows-msvc
                     lib: msvc
                     architecture: x64
-                  - host: windows-latest
+                  - host: ubuntu-latest
                     os: windows
                     version: 20H2
                     target: aarch64-pc-windows-msvc
@@ -395,7 +395,7 @@ jobs:
             with:
                 platforms: ${{ matrix.settings.architecture }}
           - name: Init
-            if: ${{ matrix.settings.architecture != 'x64' && matrix.settings.host == 'windows-latest' }}
+            if: ${{ matrix.settings.architecture != 'x64' && matrix.settings.os == 'windows' }}
             uses: sandervocke/setup-qemu-container@v1
             with:
                 container: alpine
