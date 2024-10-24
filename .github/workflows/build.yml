@@ -265,7 +265,7 @@ jobs:
                     architecture: x64
                   - host: ubuntu-latest
                     os: windows
-                    version: 20H2-KB5016616
+                    version: latest
                     target: aarch64-pc-windows-msvc
                     lib: msvc
                     architecture: arm64
@@ -394,13 +394,11 @@ jobs:
             uses: docker/setup-qemu-action@v3
             with:
                 platforms: ${{ matrix.settings.architecture }}
-          - name: Inspect
-            run: docker manifest inspect mcr.microsoft.com/windows:${{ matrix.settings.version }}
           - name: Init
             if: ${{ matrix.settings.architecture != 'x64' && matrix.settings.os == 'windows' }}
             uses: sandervocke/setup-qemu-container@v1
             with:
-                container: "mcr.microsoft.com/windows:${{ matrix.settings.version }}"
+                container: "dockurr/windows:${{ matrix.settings.version }}"
                 arch: ${{ matrix.settings.architecture }}
           - name: Init step 2
             if: ${{ matrix.settings.architecture != 'x64' && matrix.settings.os != 'macos' }}
