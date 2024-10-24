@@ -341,6 +341,7 @@ jobs:
             with:
                 container: "dockurr/windows:${{ matrix.settings.version }}"
                 arch: ${{ matrix.settings.architecture }}
+                podman_args: -it --rm -p 8006:8006 --device=/dev/kvm --cap-add NET_ADMIN --stop-timeout 120
           - name: Check os
             if: ${{ (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos' ) && (matrix.settings.lib == 'gnu' || matrix.settings.os == 'windows' ) }}
             run: |
