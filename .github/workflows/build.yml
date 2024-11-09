@@ -364,7 +364,6 @@ jobs:
                 architecture: ${{ matrix.settings.architecture }}
           - name: Install node
             if: ${{ matrix.settings.architecture != 'x64' || matrix.settings.os == 'windows'  }}
-            shell: run-in-container.sh {0}
             run: |
                 echo x
           - name: Check node
@@ -481,7 +480,6 @@ jobs:
                     npm run test
           - name: Test bindings
             if: ${{ matrix.settings.os == 'windows' && matrix.settings.architecture != 'x64' }}
-            shell: run-in-container.sh {0}
             run: |
                 npm run test
     Publish:
