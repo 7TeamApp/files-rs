@@ -1,0 +1,21 @@
+{
+    "name": "@7teamapp/files-rs",
+    "version": "0.0.0",
+    "license": "MIT",
+    "publish": {
+        "include": [
+            "dist/",
+            "src/",
+            "public/",
+            "README.md",
+            "jsr.json",
+            "LICENSE",
+            "package.json"
+        ],
+        "exclude": ["!**/*.{cjs, cts}"]
+    },
+    "exports": {
+        ".": "./src/index.ts",
+        "./package.json": "./package.json"
+    }
+}

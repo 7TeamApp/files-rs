@@ -1,4 +1,3 @@
-import babel from 'esbuild-plugin-babel';
 import type { Options } from 'tsup';
 
 export default (<Options>{
@@ -14,22 +13,5 @@ export default (<Options>{
     skipNodeModulesBundle: true,
     tsconfig: 'test/tester.tsconfig.json',
     outExtension: (ctx) =>
-        ctx.format === 'cjs' ? { js: '.cjs' } : { js: '.mjs' },
-    // esbuildPlugins: [
-    //     babel({
-    //         filter: /.*/,
-    //         config: {
-    //             presets: [
-    //                 [
-    //                     '@babel/preset-env',
-    //                     {
-    //                         targets: {
-    //                             node: '12'
-    //                         }
-    //                     }
-    //                 ]
-    //             ]
-    //         }
-    //     })
-    // ]
+        ctx.format === 'cjs' ? { js: '.cjs' } : { js: '.mjs' }
 });

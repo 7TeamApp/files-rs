@@ -243,7 +243,7 @@ jobs:
                 name: bindings-dist
                 path: "dist/**/*"
                 if-no-files-found: error
-          - name: Upload artifact
+          - name: Upload test_dist artifact
             uses: actions/upload-artifact@v4
             with:
                 name: bindings-test-dist
@@ -352,8 +352,7 @@ jobs:
             run: |
                 uname -a
           - name: Check os
-            if: ${{ matrix.settings.architecture != 'x64' || matrix.settings.os == 'windows'  }}
-            shell: run-in-container.sh {0}
+            if: ${{ matrix.settings.architecture != 'x64' || matrix.settings.os == 'windows' }}
             run: |
                 uname -a
                 ldd --version
