@@ -13,5 +13,5 @@ export default (<Options>{
     minifySyntax: false,
     keepNames: true,
     outDir: 'dist',
-    external: [/.*node$/, /.*-javascript/]
+    external: [/.*node$/, /.*-js.ts/, /^node:.*/]
 });
