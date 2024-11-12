@@ -20,7 +20,7 @@ function ifComExist(tester, fnTrue, fnFalse) {
 }
 
 function exec(cmd, callbackErr, callback) {
-    var comandAndArgs = cmd.split(" ");
+    var comandAndArgs = cmd.split(' ');
     var comand = comandAndArgs[0];
     var args = comandAndArgs.slice(1);
     console.log(comand, ' ', args); //!!!!!!!!!!
@@ -55,13 +55,18 @@ function runBunTest() {
 
 function runNodeVitest() {
     console.log('using node with vitest');
-    exec('npm run vitest run -r test', throwErr);
+    exec(
+        (process.platform === 'win32' ? 'npm.cmd' : 'npm') +
+            'npm run vitest run -r test',
+        throwErr
+    );
 }
 
 function runNodeJest() {
     console.log('using node with jest');
     exec(
-        "npm run jest --all --rootDir test_dist --testMatch '**/*.cjs'",
+        (process.platform === 'win32' ? 'npm.cmd' : 'npm') +
+            "npm run jest --all --rootDir test_dist --testMatch '**/*.cjs'",
         throwErr
     );
 }
