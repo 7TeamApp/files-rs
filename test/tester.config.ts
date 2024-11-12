@@ -1,7 +1,7 @@
 import type { Options } from 'tsup';
 
 export default (<Options>{
-    entryPoints: ['test/**/!(tester.config).ts'],
+    entryPoints: ['test/**/!(tester.*).ts'],
     format: ['cjs'],
     dts: false,
     cjsInterop: true,
