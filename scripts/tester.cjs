@@ -82,7 +82,7 @@ function runPnpmJest() {
 
 function runYarnVitest() {
     console.log('using yarn with vitest');
-    exec('yarn vitest run -r test', runYarnJest);
+    exec('yarn vitest run -r test', throwErr);
 }
 
 function runYarnJest() {
@@ -92,7 +92,7 @@ function runYarnJest() {
 
 function runNpxVitest() {
     console.log('using npx with vitest');
-    exec('npx vitest run -r test', runNpxJest);
+    exec('npx vitest run -r test', throwErr);
 }
 
 function runNpxJest() {
