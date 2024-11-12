@@ -57,7 +57,7 @@ function runNodeVitest() {
     console.log('using node with vitest');
     exec(
         (process.platform === 'win32' ? 'npm.cmd' : 'npm') +
-            'run vitest run -r test',
+            ' run vitest run -r test',
         throwErr
     );
 }
@@ -66,7 +66,7 @@ function runNodeJest() {
     console.log('using node with jest');
     exec(
         (process.platform === 'win32' ? 'npm.cmd' : 'npm') +
-            "run jest --all --rootDir test_dist --testMatch '**/*.cjs'",
+            " run jest --all --rootDir test_dist --testMatch '**/*.cjs'",
         throwErr
     );
 }
