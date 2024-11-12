@@ -1,6 +1,7 @@
 var cp = require('node:child_process');
 
-function throwErr(){
+function throwErr(message) {
+    console.error(message);
     throw new Error();
 }
 
@@ -19,23 +20,34 @@ function ifComExist(tester, fnTrue, fnFalse) {
 }
 
 function exec(cmd, callbackErr, callback) {
-    cp.exec(cmd, function stdout(err, stdout, stderr) {
-        if (err) {
-            console.error(err.message);
-            return callbackErr ? callbackErr() : null;
-        }
+    var comand_and_args = cmd.split(" ");
+    var comand = comand_and_args[0];
+    var args = comand_and_args.slice(1);
+    var child = cp.spawn(comand, args);
 
-        console.log(stderr);
-        console.log(stdout);
+    child.stdout.on('data', function (data) {
+        console.log(data);
+    });
+
+    child.stderr.on('data', function (data) {
+        console.error(data);
+    });
+
+    child.on('error', function (err) {
+        return callbackErr ? callbackErr(err.message) : null;
+    });
+
+    child.on('close', function (code) {
+        console.log('Child process exited with code ' + code);
         return callback ? callback() : null;
     });
 }
 
-function runBun(){
+function runBun() {
     ifComExist('bun', runBunTest, runPnpm);
 }
 
-function runPnpm(){
+function runPnpm() {
     ifComExist(
         'pnpm',
         function () {
@@ -45,22 +57,14 @@ function runPnpm(){
     );
 }
 
-function runYarn(){
+function runYarn() {
     ifComExist(
         'yarn',
         function () {
-            ifComExist(
-                'yarn vitest',
-                runYarnVitest,
-                runYarnJest
-            );
+            ifComExist('yarn vitest', runYarnVitest, runYarnJest);
         },
         function () {
-            ifComExist(
-                'npx vitest',
-                runNpxVitest,
-                runNpxJest
-            );
+            ifComExist('npx vitest', runNpxVitest, runNpxJest);
         }
     );
 }
@@ -77,7 +81,10 @@ function runPnpmVitest() {
 
 function runPnpmJest() {
     console.log('using pnpm with jest');
-    exec("pnpm jest --rootDir test_dist --testMatch '**/*.cjs'", throwErr);
+    exec(
+        "pnpm jest --rootDir test_dist --testMatch '**/*.cjs'",
+        throwErr
+    );
 }
 
 function runYarnVitest() {
@@ -87,7 +94,10 @@ function runYarnVitest() {
 
 function runYarnJest() {
     console.log('using yarn with jest');
-    exec("yarn jest --all --rootDir test_dist --testMatch '**/*.cjs'", throwErr);
+    exec(
+        "yarn jest --all --rootDir test_dist --testMatch '**/*.cjs'",
+        throwErr
+    );
 }
 
 function runNpxVitest() {
@@ -97,7 +107,10 @@ function runNpxVitest() {
 
 function runNpxJest() {
     console.log('using npx with jest');
-    exec("npx jest --all --rootDir test_dist --testMatch '**/*.cjs'", throwErr);
+    exec(
+        "npx jest --all --rootDir test_dist --testMatch '**/*.cjs'",
+        throwErr
+    );
 }
 
 runBun();
