@@ -20,9 +20,10 @@ function ifComExist(tester, fnTrue, fnFalse) {
 }
 
 function exec(cmd, callbackErr, callback) {
-    var comand_and_args = cmd.split(" ");
-    var comand = comand_and_args[0];
-    var args = comand_and_args.slice(1);
+    var comandAndArgs = cmd.split(" ");
+    var comand = comandAndArgs[0];
+    var args = comandAndArgs.slice(1);
+    console.log(comand, ' ', args); //!!!!!!!!!!
     var child = cp.spawn(comand, args);
 
     child.stdout.on('data', function (data) {
@@ -44,29 +45,7 @@ function exec(cmd, callbackErr, callback) {
 }
 
 function runBun() {
-    ifComExist('bun', runBunTest, runPnpm);
-}
-
-function runPnpm() {
-    ifComExist(
-        'pnpm',
-        function () {
-            ifComExist('pnpm vitest', runPnpmVitest, runPnpmJest);
-        },
-        runYarn
-    );
-}
-
-function runYarn() {
-    ifComExist(
-        'yarn',
-        function () {
-            ifComExist('yarn vitest', runYarnVitest, runYarnJest);
-        },
-        function () {
-            ifComExist('npx vitest', runNpxVitest, runNpxJest);
-        }
-    );
+    ifComExist('bun', runBunTest, runNodeVitest);
 }
 
 function runBunTest() {
@@ -74,39 +53,13 @@ function runBunTest() {
     exec('bun test .ts', throwErr);
 }
 
-function runPnpmVitest() {
-    console.log('using pnpm with vitest');
-    exec('pnpm vitest run -r test', runPnpmJest);
-}
-
-function runPnpmJest() {
-    console.log('using pnpm with jest');
-    exec(
-        "pnpm jest --rootDir test_dist --testMatch '**/*.cjs'",
-        throwErr
-    );
-}
-
-function runYarnVitest() {
-    console.log('using yarn with vitest');
-    exec('yarn vitest run -r test', throwErr);
-}
-
-function runYarnJest() {
-    console.log('using yarn with jest');
-    exec(
-        "yarn jest --all --rootDir test_dist --testMatch '**/*.cjs'",
-        throwErr
-    );
-}
-
-function runNpxVitest() {
-    console.log('using npx with vitest');
+function runNodeVitest() {
+    console.log('using node with vitest');
     exec('npx vitest run -r test', throwErr);
 }
 
-function runNpxJest() {
-    console.log('using npx with jest');
+function runNodeJest() {
+    console.log('using node with jest');
     exec(
         "npx jest --all --rootDir test_dist --testMatch '**/*.cjs'",
         throwErr
