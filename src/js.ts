@@ -1,5 +1,5 @@
-import fs from 'node:fs';
-import { join, basename } from 'node:path';
+// import fs from 'node:fs';
+// import { join, basename } from 'node:path';
 
 export const jsCopyGlobMulty = (
     patterns: string[],
@@ -21,11 +21,11 @@ export const jsCopySingle = (
     pathStr: string,
     outDir: string
 ): void => {
-    fs.mkdirSync(outDir, { recursive: true });
+    // fs.mkdirSync(outDir, { recursive: true });
 
-    const fileName: string = basename(pathStr);
-    const targetPath: string = join(outDir, fileName);
-    fs.copyFileSync(pathStr, targetPath);
+    // const fileName: string = basename(pathStr);
+    // const targetPath: string = join(outDir, fileName);
+    // fs.copyFileSync(pathStr, targetPath);
 };
 
 export default {

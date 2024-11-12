@@ -3,3 +3,5 @@ import type * as BunTest from 'bun:test';
 
 export type Tester = typeof BunTest;
 export * from 'bun:test';
+
+export default Tester;

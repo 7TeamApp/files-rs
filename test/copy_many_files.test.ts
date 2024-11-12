@@ -2,18 +2,23 @@ import fs from 'node:fs';
 import { join } from 'node:path';
 import crypto from 'node:crypto';
 import { copy } from 'files-rs';
-import {
-    test,
-    expect,
-    describe,
-    beforeEach,
-    afterEach
-} from 'lib/tester';
 
-const distFolderName: string = 'dist';
-const distFolder: string = join(__dirname, distFolderName);
-const distFolderRelat: string = join('.', 'test', distFolderName);
-const rerunEach: number = 10000;
+import tester from 'lib/tester';
+Object.assign(global, tester);
+
+const distFolderName: string = 'dist2';
+const distFolder: string = join(
+    __dirname,
+    '..',
+    'test_dist',
+    distFolderName
+);
+const distFolderRelat: string = join(
+    '.',
+    'test_dist',
+    distFolderName
+);
+const rerunEach: number = 100;
 const each: undefined[] = new Array(rerunEach).fill(undefined);
 
 let numFiles: number | undefined;
@@ -45,13 +50,11 @@ beforeEach(() => {
         return randStrs;
     };
 
-    const getRandBool = (): boolean => Math.random() >= 0.5;
-
-    numFiles = 10;
+    numFiles = getRandNum(1, 1000);
 
     const randPathCopied: string[] = getRandPath(
         getRandNum(1, 9),
-        0,
+        1,
         20
     );
 
@@ -60,29 +63,55 @@ beforeEach(() => {
     copiedDistFolderRelat = join(distFolderRelat, ...randPathCopied);
 
     for (let i = 0; i < numFiles; i++) {
-        const fileName: string = getRandText(getRandNum(2, 20));
-        fileNames.push(fileName);
+        let srcFolder: string;
+        let srcFile: string;
 
-        const randPath: string[] = getRandPath(
-            getRandNum(1, 9),
-            0,
-            20
-        );
+        let isFileExist = true;
 
-        const srcFolder: string = join(distFolder, ...randPath);
-        const srcFile: string = join(srcFolder, fileName);
-        srcFiles.push(srcFile);
-        const srcFolderRelat: string = join(
-            distFolderRelat,
-            ...randPath
-        );
-        const srcFileRelat: string = join(srcFolderRelat, fileName);
-        srcFilesRelat.push(srcFileRelat);
+        do {
+            const fileName: string = getRandText(getRandNum(2, 20));
 
-        const copiedFile: string = join(copiedDistFolder, fileName);
-        copiedFiles.push(copiedFile);
+            const randPath: string[] = getRandPath(
+                getRandNum(1, 9),
+                1,
+                20
+            );
 
-        const fileContent: string = getRandBool() ? '0' : '1'; // getRandText(getRandNum(1, 1000));
+            srcFolder = join(distFolder, ...randPath);
+            srcFile = join(srcFolder, fileName);
+
+            const copiedFile: string = join(
+                copiedDistFolder,
+                fileName
+            );
+
+            if (
+                !(
+                    srcFiles.includes(srcFile) ||
+                    copiedFiles.includes(copiedFile) ||
+                    srcFiles.includes(copiedFile)
+                )
+            ) {
+                fileNames.push(fileName);
+
+                srcFiles.push(srcFile);
+                const srcFolderRelat: string = join(
+                    distFolderRelat,
+                    ...randPath
+                );
+                const srcFileRelat: string = join(
+                    srcFolderRelat,
+                    fileName
+                );
+                srcFilesRelat.push(srcFileRelat);
+
+                copiedFiles.push(copiedFile);
+
+                isFileExist = false;
+            }
+        } while (isFileExist);
+
+        const fileContent: string = getRandText(getRandNum(1, 10000));
         filesContents.push(fileContent);
 
         fs.mkdirSync(srcFolder, { recursive: true });
@@ -99,14 +128,10 @@ describe('copy many files', () => {
             const distFilesContents: string[] = [];
             for (let i = 0; i < (numFiles as number); i++) {
                 const distFileContent: string = fs.readFileSync(
-                    copiedFiles[i] as string,
+                    (copiedFiles as string[])[i],
                     'utf-8'
                 );
                 distFilesContents.push(distFileContent);
-
-                if (distFileContent !== filesContents[i]) {
-                    console.error('!!!!!!!!!!!!!!!!!!!');
-                }
             }
 
             expect(distFilesContents).toEqual(filesContents);
@@ -121,14 +146,10 @@ describe('copy many files', () => {
             const distFilesContents: string[] = [];
             for (let i = 0; i < (numFiles as number); i++) {
                 const distFileContent: string = fs.readFileSync(
-                    copiedFiles[i] as string,
+                    (copiedFiles as string[])[i],
                     'utf-8'
                 );
                 distFilesContents.push(distFileContent);
-
-                if (distFileContent !== filesContents[i]) {
-                    console.error('!!!!!!!!!!!!!!!!!!!');
-                }
             }
 
             expect(distFilesContents).toEqual(filesContents);
@@ -143,14 +164,10 @@ describe('copy many files', () => {
             const distFilesContents: string[] = [];
             for (let i = 0; i < (numFiles as number); i++) {
                 const distFileContent: string = fs.readFileSync(
-                    copiedFiles[i] as string,
+                    (copiedFiles as string[])[i],
                     'utf-8'
                 );
                 distFilesContents.push(distFileContent);
-
-                if (distFileContent !== filesContents[i]) {
-                    console.error('!!!!!!!!!!!!!!!!!!!');
-                }
             }
 
             expect(distFilesContents).toEqual(filesContents);
@@ -165,14 +182,10 @@ describe('copy many files', () => {
             const distFilesContents: string[] = [];
             for (let i = 0; i < (numFiles as number); i++) {
                 const distFileContent: string = fs.readFileSync(
-                    copiedFiles[i] as string,
+                    (copiedFiles as string[])[i],
                     'utf-8'
                 );
                 distFilesContents.push(distFileContent);
-
-                if (distFileContent !== filesContents[i]) {
-                    console.error('!!!!!!!!!!!!!!!!!!!');
-                }
             }
 
             expect(distFilesContents).toEqual(filesContents);

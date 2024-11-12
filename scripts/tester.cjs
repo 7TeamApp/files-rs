@@ -72,7 +72,7 @@ function runBunTest() {
 
 function runPnpmVitest() {
     console.log('using pnpm with vitest');
-    exec('pnpm vitest run --no-file-parallelism --dir test', runPnpmJest);
+    exec('pnpm vitest run -r test', runPnpmJest);
 }
 
 function runPnpmJest() {
@@ -82,7 +82,7 @@ function runPnpmJest() {
 
 function runYarnVitest() {
     console.log('using yarn with vitest');
-    exec('yarn vitest run --no-file-parallelism --dir test', runYarnJest);
+    exec('yarn vitest run -r test', runYarnJest);
 }
 
 function runYarnJest() {
@@ -92,7 +92,7 @@ function runYarnJest() {
 
 function runNpxVitest() {
     console.log('using npx with vitest');
-    exec('npx vitest run --no-file-parallelism --dir test', runNpxJest);
+    exec('npx vitest run -r test', runNpxJest);
 }
 
 function runNpxJest() {
