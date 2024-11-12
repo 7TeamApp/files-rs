@@ -74,7 +74,7 @@ switch (platform) {
                     if (isLocalFileExist) {
                         nativeBinding = require('./javascript');
                     } else {
-                        nativeBinding = require('files-rs-javascript');
+                        nativeBinding = require('js.ts');
                     }
                 } catch (e) {
                     loadError = e;
@@ -142,7 +142,7 @@ switch (platform) {
                     if (isLocalFileExist) {
                         nativeBinding = require('./javascript');
                     } else {
-                        nativeBinding = require('files-rs-javascript');
+                        nativeBinding = require('js.ts');
                     }
                 } catch (e) {
                     loadError = e;
@@ -206,7 +206,7 @@ switch (platform) {
                     if (isLocalFileExist) {
                         nativeBinding = require('./javascript');
                     } else {
-                        nativeBinding = require('files-rs-javascript');
+                        nativeBinding = require('js.ts');
                     }
                 } catch (e) {
                     loadError = e;
@@ -228,7 +228,7 @@ switch (platform) {
                 if (isLocalFileExist) {
                     nativeBinding = require('./javascript');
                 } else {
-                    nativeBinding = require('files-rs-javascript');
+                    nativeBinding = require('js.ts');
                 }
             } catch (e) {
                 loadError = e;
@@ -418,7 +418,7 @@ switch (platform) {
                     if (isLocalFileExist) {
                         nativeBinding = require('./javascript');
                     } else {
-                        nativeBinding = require('files-rs-javascript');
+                        nativeBinding = require('js.ts');
                     }
                 } catch (e) {
                     loadError = e;
@@ -439,7 +439,7 @@ switch (platform) {
             if (isLocalFileExist) {
                 nativeBinding = require('./javascript');
             } else {
-                nativeBinding = require('files-rs-javascript');
+                nativeBinding = require('js.ts');
             }
         } catch (e) {
             loadError = e;
