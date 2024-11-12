@@ -104,9 +104,9 @@ jobs:
                         sudo pkg install -y -f node npm
                         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --profile minimal --default-toolchain stable -y
                         . "$HOME/.cargo/env"
-                        sudo npm i -g yarn
-                        yarn install
-                        yarn build
+                        sudo npm i -g bun
+                        bun i
+                        yarn run build
         name: Build ${{ matrix.settings.target }}-node@20
         runs-on: ${{ matrix.settings.host }}
         env:
