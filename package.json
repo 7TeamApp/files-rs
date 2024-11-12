@@ -63,6 +63,7 @@
     },
     "type": "module",
     "license": "MIT",
+    "workspaces": ["./lib/", "./"],
     "devDependencies": {
         "@babel/preset-env": "^7.25.8",
         "@biomejs/biome": "latest",
@@ -74,7 +75,7 @@
         "chalk": "^5.3.0",
         "fast-glob": "^3.3.2",
         "jest": "latest",
-        "lib": "file:./lib",
+        "untester": "latest",
         "tar": "^7.4.3",
         "tsup": "latest",
         "typescript": "latest",

@@ -1,4 +1,4 @@
-import Bun from '../lib/bun';
+import Bun from '../lib/bun.ts';
 
 const pg = await Bun.file('./package.json').json();
 

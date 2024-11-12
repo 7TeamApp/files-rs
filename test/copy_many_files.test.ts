@@ -3,10 +3,11 @@ import { join } from 'node:path';
 import crypto from 'node:crypto';
 import { copy } from 'files-rs';
 
-import tester from 'lib/tester';
+import tester from 'untester';
 Object.assign(global, tester);
 
 const distFolderName: string = 'dist2';
+
 const distFolder: string = join(
     __dirname,
     '..',

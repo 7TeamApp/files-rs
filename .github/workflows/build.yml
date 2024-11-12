@@ -310,6 +310,10 @@ jobs:
                     architecture: armv7
                 node:
                     - 20
+                runtime:
+                    - bun
+                    - node
+                    - deno
         runs-on: ${{ matrix.settings.host }}
         steps:
           - name: Checkout
@@ -346,34 +350,44 @@ jobs:
             run: |
                 uname -a
           - name: Install node
-            if: ${{ matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
+            if: ${{ matrix.runtime == 'node' && matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
             uses: actions/setup-node@v4.0.4
             with:
                 node-version: ${{ matrix.node }}
                 architecture: ${{ matrix.settings.architecture }}
-          - name: Install node
-            if: ${{ matrix.settings.architecture != 'x64' || matrix.settings.os == 'windows'  }}
-            run: |
-                echo x
           - name: Check node
-            if: ${{ matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
+            if: ${{ matrix.runtime == 'node' && matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
             run: |
                 node -v
                 npm -v
                 node -p "process.platform"
                 node -p "process.arch"
           - name: Install Bun
-            if: ${{ matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
+            if: ${{ matrix.runtime == 'bun' && matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
             uses: oven-sh/setup-bun@v2.0.1
           - name: Check Bun
-            if: ${{ matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
+            if: ${{ matrix.runtime == 'bun' && matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
             run: |
                 bun -v
                 bun -e "console.log(process.platform)"
                 bun -e "console.log(process.arch)"
+          - name: Install Deno
+            if: ${{ matrix.runtime == 'deno' }}
+            uses: denoland/setup-deno@v2
+            with:
+                deno-version: v2.x
+          - name: Check Deno
+            if: ${{ matrix.runtime == 'deno' }}
+            run: deno --version
           - name: Install dependencies
-            if: ${{ matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
+            if: ${{ matrix.runtime == 'node' && matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
+            run: npm i
+          - name: Install dependencies
+            if: ${{ matrix.runtime == 'bun' && matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
             run: bun i
+          - name: Install dependencies
+            if: ${{ matrix.runtime == 'deno' && matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
+            run: deno i
           - name: Init
             if: ${{ matrix.settings.os == 'freebsd' }}
             uses: cross-platform-actions/action@v0.25.0

@@ -3,12 +3,22 @@ import { join } from 'node:path';
 import crypto from 'node:crypto';
 import { copy } from 'files-rs';
 
-import tester from 'lib/tester';
+import tester from 'untester';
 Object.assign(global, tester);
 
 const distFolderName: string = 'dist';
-const distFolder: string = join(__dirname, '..', 'test_dist', distFolderName);
-const distFolderRelat: string = join('.', 'test_dist', distFolderName);
+
+const distFolder: string = join(
+    __dirname,
+    '..',
+    'test_dist',
+    distFolderName
+);
+const distFolderRelat: string = join(
+    '.',
+    'test_dist',
+    distFolderName
+);
 const rerunEach: number = 200;
 const each: number[] = new Array(rerunEach)
     .fill(undefined)

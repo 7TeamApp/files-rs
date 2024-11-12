@@ -17,5 +17,9 @@
     "exports": {
         ".": "./src/index.ts",
         "./package.json": "./package.json"
+    },
+    "nodeModulesDir": "auto",
+    "tasks": {
+        "test": "vitest run -r test"
     }
 }
