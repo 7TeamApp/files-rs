@@ -55,13 +55,13 @@ function runBunTest() {
 
 function runNodeVitest() {
     console.log('using node with vitest');
-    exec('npx vitest run -r test', throwErr);
+    exec('npm run vitest run -r test', throwErr);
 }
 
 function runNodeJest() {
     console.log('using node with jest');
     exec(
-        "npx jest --all --rootDir test_dist --testMatch '**/*.cjs'",
+        "npm run jest --all --rootDir test_dist --testMatch '**/*.cjs'",
         throwErr
     );
 }
