@@ -23,15 +23,15 @@ function exec(cmd, callbackErr, callback) {
     var comandAndArgs = cmd.split(' ');
     var comand = comandAndArgs[0];
     var args = comandAndArgs.slice(1);
-    console.log(comand, ' ', args); //!!!!!!!!!!
+
     var child = cp.spawn(comand, args);
 
     child.stdout.on('data', function (data) {
-        console.log(data);
+        console.log(data.toString());
     });
 
     child.stderr.on('data', function (data) {
-        console.error(data);
+        console.error(data.toString());
     });
 
     child.on('error', function (err) {
