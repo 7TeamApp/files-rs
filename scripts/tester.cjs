@@ -20,32 +20,19 @@ function ifComExist(tester, fnTrue, fnFalse) {
 }
 
 function exec(cmd, callbackErr, callback) {
-    var comandAndArgs = cmd.split(' ');
-    var comand = comandAndArgs[0];
-    var args = comandAndArgs.slice(1);
+    cp.exec(cmd, function (err, stdout, stderr) {
+        if (err) {
+            return callbackErr ? callbackErr(err.message) : null;
+        }
 
-    var child = cp.spawn(comand, args);
-
-    child.stdout.on('data', function (data) {
-        console.log(data.toString());
-    });
-
-    child.stderr.on('data', function (data) {
-        console.error(data.toString());
-    });
-
-    child.on('error', function (err) {
-        return callbackErr ? callbackErr(err.message) : null;
-    });
-
-    child.on('close', function (code) {
-        console.log('Child process exited with code ' + code);
+        console.log(stderr);
+        console.log(stdout);
         return callback ? callback() : null;
     });
 }
 
 function runBun() {
-    ifComExist('bun', runBunTest, runNodeVitest);
+    ifComExist('bun', runBunTest, runNpxVitest);
 }
 
 function runBunTest() {
@@ -53,20 +40,15 @@ function runBunTest() {
     exec('bun test .ts', throwErr);
 }
 
-function runNodeVitest() {
-    console.log('using node with vitest');
-    exec(
-        (process.platform === 'win32' ? 'npm.cmd' : 'npm') +
-            ' run vitest run -r test',
-        throwErr
-    );
+function runNpxVitest() {
+    console.log('using npx with vitest');
+    exec('npx vitest run -r test', throwErr);
 }
 
-function runNodeJest() {
-    console.log('using node with jest');
+function runNpxJest() {
+    console.log('using npx with jest');
     exec(
-        (process.platform === 'win32' ? 'npm.cmd' : 'npm') +
-            " run jest --all --rootDir test_dist --testMatch '**/*.cjs'",
+        "npx jest --all --rootDir test_dist --testMatch '**/*.cjs'",
         throwErr
     );
 }
