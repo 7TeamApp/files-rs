@@ -292,13 +292,15 @@ jobs:
                     lib: musl
                     architecture: x64
                     container: "node:20-alpine"
+                    container_architecture: amd64
                   - host: ubuntu-latest
                     os: ubuntu
                     version: latest
                     target: aarch64-unknown-linux-gnu
                     lib: gnu
                     architecture: arm64
-                    container: "node:20-slim"
+                    container: "ubuntu:latest"
+                    container_architecture: "arm64/v8"
                   - host: ubuntu-latest
                     os: alpine
                     version: latest
@@ -306,6 +308,7 @@ jobs:
                     lib: musl
                     architecture: arm64
                     container: "node:20-alpine"
+                    container_architecture: arm64
                   - host: ubuntu-latest
                     os: debian
                     version: latest
@@ -313,6 +316,8 @@ jobs:
                     lib: "gnu debian"
                     architecture: armv7
                     container: "node:20-bullseye-slim"
+                    container_architecture: armv7
+                    
                 node:
                     - 20
                 runtime:
@@ -343,7 +348,7 @@ jobs:
             uses: sandervocke/setup-qemu-container@v1
             with:
                 container: ${{ matrix.settings.container }}
-                arch: ${{ matrix.settings.architecture }}
+                arch: ${{ matrix.settings.container_architecture }}
                 podman_args: -v ${{ github.workspace }}:/build -w /build
           - name: Init
             if: ${{ matrix.settings.os == 'freebsd' }}
