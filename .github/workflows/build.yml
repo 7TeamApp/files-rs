@@ -395,6 +395,9 @@ jobs:
             shell: wrap-shell {0}
             run: |
                 uname -a
+          - name: Check curl
+            shell: wrap-shell {0}
+            run: curl --version
           - name: Install node
             if: ${{ matrix.runtime == 'node' && !matrix.settings.vm && !matrix.settings.container }}
             uses: actions/setup-node@v4.0.4
