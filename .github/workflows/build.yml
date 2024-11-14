@@ -391,7 +391,7 @@ jobs:
                 uname -a
                 ldd --version
           - name: Check os
-            if: ${{ matrix.settings.os == 'macos' && matrix.settings.os == 'alpine' }}
+            if: ${{ matrix.settings.os == 'macos' || matrix.settings.os == 'alpine' }}
             shell: wrap-shell {0}
             run: |
                 uname -a
