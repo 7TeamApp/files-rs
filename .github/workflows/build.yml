@@ -279,6 +279,7 @@ jobs:
                     version: '14.1'
                     target: x86_64-unknown-freebsd
                     architecture: x64
+                    vm: freebsd:14.1
                   - host: ubuntu-latest
                     os: ubuntu
                     version: latest
@@ -372,15 +373,19 @@ jobs:
           - name: Setup Shell Wrapper
             uses: sandervocke/setup-shell-wrapper@v1
           - name: Use regular shell
-            if: ${{ !matrix.settings.container }}
+            if: ${{ !matrix.settings.container && !matrix.settings.vm }}
             shell: bash
             run: echo "WRAP_SHELL=bash" >> $GITHUB_ENV
           - name: Use container shell
             if: ${{ matrix.settings.container }}
             shell: bash
             run: echo "WRAP_SHELL=run-in-container.sh" >> $GITHUB_ENV
+          - name: Use vm shell
+            if: ${{ matrix.settings.vm }}
+            shell: bash
+            run: echo "WRAP_SHELL=bash" >> $GITHUB_ENV
           - name: Check os
-            if: ${{ matrix.settings.os != 'macos' && matrix.settings.os != 'freebsd' && matrix.settings.os != 'alpine' }}
+            if: ${{ matrix.settings.os != 'macos' && !matrix.settings.vm && matrix.settings.os != 'alpine' }}
             shell: wrap-shell {0}
             run: |
                 uname -a
@@ -391,13 +396,19 @@ jobs:
             run: |
                 uname -a
           - name: Install node
-            if: ${{ matrix.runtime == 'node' && matrix.settings.os != 'freebsd' && !matrix.settings.container }}
+            if: ${{ matrix.runtime == 'node' && !matrix.settings.vm && !matrix.settings.container }}
             uses: actions/setup-node@v4.0.4
             with:
                 node-version: ${{ matrix.node }}
                 architecture: ${{ matrix.settings.architecture }}
+          - name: Install node
+            if: ${{ matrix.runtime == 'node' && matrix.settings.container }}
+            shell: wrap-shell {0}
+            run: |
+                sudo apt-get update
+                sudo apt-get install nodejs
           - name: Check node
-            if: ${{ matrix.runtime == 'node' && matrix.settings.os != 'freebsd' }}
+            if: ${{ matrix.runtime == 'node' && !matrix.settings.vm }}
             shell: wrap-shell {0}
             run: |
                 node -v
@@ -405,38 +416,50 @@ jobs:
                 node -p "process.platform"
                 node -p "process.arch"
           - name: Install Bun
-            if: ${{ matrix.runtime == 'bun' && matrix.settings.os != 'freebsd' && !matrix.settings.container }}
+            if: ${{ matrix.runtime == 'bun' && !matrix.settings.vm && !matrix.settings.container }}
             uses: oven-sh/setup-bun@v2.0.1
+          - name: Install Bun
+            if: ${{ matrix.runtime == 'bun' && matrix.settings.container }}
+            shell: wrap-shell {0}
+            run: |
+                sudo apt-get update
+                sudo apt-get install bun
           - name: Check Bun
-            if: ${{ matrix.runtime == 'bun'  && matrix.settings.os != 'freebsd' }}
+            if: ${{ matrix.runtime == 'bun'  && !matrix.settings.vm }}
             shell: wrap-shell {0}
             run: |
                 bun -v
                 bun -e "console.log(process.platform)"
                 bun -e "console.log(process.arch)"
           - name: Install Deno
-            if: ${{ matrix.runtime == 'deno' && matrix.settings.os != 'freebsd' && !matrix.settings.container }}
+            if: ${{ matrix.runtime == 'deno' && !matrix.settings.vm && !matrix.settings.container }}
             uses: denoland/setup-deno@v2
             with:
                 deno-version: v2.x
+          - name: Install Bun
+            if: ${{ matrix.runtime == 'deno' && matrix.settings.container }}
+            shell: wrap-shell {0}
+            run: |
+                sudo apt-get update
+                sudo apt-get install deno
           - name: Check Deno
-            if: ${{ matrix.runtime == 'deno' && matrix.settings.os != 'freebsd' }}
+            if: ${{ matrix.runtime == 'deno' && !matrix.settings.vm }}
             shell: wrap-shell {0}
             run: deno --version
           - name: Install dependencies
             shell: wrap-shell {0}
-            if: ${{ matrix.runtime == 'node' && matrix.settings.os != 'freebsd' }}
+            if: ${{ matrix.runtime == 'node' && !matrix.settings.vm }}
             run: npm i
           - name: Install dependencies
             shell: wrap-shell {0}
-            if: ${{ matrix.runtime == 'bun' && matrix.settings.os != 'freebsd' }}
+            if: ${{ matrix.runtime == 'bun' && !matrix.settings.vm }}
             run: bun i
           - name: Install dependencies
             shell: wrap-shell {0}
-            if: ${{ matrix.runtime == 'deno' && matrix.settings.os != 'freebsd' }}
+            if: ${{ matrix.runtime == 'deno' && !matrix.settings.vm }}
             run: deno i
           - name: Test bindings
-            if: ${{ matrix.settings.os != 'freebsd' }}
+            if: ${{ !matrix.settings.vm }}
             shell: wrap-shell {0}
             run: bash ./scripts/tester.sh
           - name: Test bindings
