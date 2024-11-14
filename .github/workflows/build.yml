@@ -349,7 +349,6 @@ jobs:
             with:
                 container: ${{ matrix.settings.container }}
                 arch: ${{ matrix.settings.container_architecture }}
-                podman_args: -v ${{ github.workspace }}:/build -w /build
           - name: Init
             if: ${{ matrix.settings.os == 'freebsd' }}
             uses: cross-platform-actions/action@v0.25.0
@@ -399,7 +398,7 @@ jobs:
           - name: Install curl
             if: ${{ matrix.settings.os == 'ubuntu' || matrix.settings.os == 'alpine' }}
             shell: wrap-shell {0}
-            run: apt install curl
+            run: bash ./scripts/packetManager.sh install curl
           - name: Check curl
             shell: wrap-shell {0}
             run: curl --version
@@ -414,7 +413,7 @@ jobs:
             shell: wrap-shell {0}
             run: |
                 curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-                apt install -y nodejs
+                bash ./scripts/packetManager.sh install -y nodejs
           - name: Check node
             if: ${{ matrix.runtime == 'node' && !matrix.settings.vm }}
             shell: wrap-shell {0}
