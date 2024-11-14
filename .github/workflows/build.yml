@@ -374,15 +374,12 @@ jobs:
             uses: sandervocke/setup-shell-wrapper@v1
           - name: Use regular shell
             if: ${{ !matrix.settings.container && !matrix.settings.vm }}
-            shell: bash
             run: echo "WRAP_SHELL=bash" >> $GITHUB_ENV
           - name: Use container shell
             if: ${{ matrix.settings.container }}
-            shell: bash
             run: echo "WRAP_SHELL=run-in-container.sh" >> $GITHUB_ENV
           - name: Use vm shell
             if: ${{ matrix.settings.vm }}
-            shell: bash
             run: echo "WRAP_SHELL=bash" >> $GITHUB_ENV
           - name: Check os
             if: ${{ matrix.settings.os != 'macos' && !matrix.settings.vm && matrix.settings.os != 'alpine' }}
@@ -395,6 +392,10 @@ jobs:
             shell: wrap-shell {0}
             run: |
                 uname -a
+          - name: Install curl
+            if: ${{ matrix.settings.os == 'ubuntu' || matrix.settings.os == 'alpine' }}
+            shell: wrap-shell {0}
+            run: apt install curl
           - name: Check curl
             shell: wrap-shell {0}
             run: curl --version
