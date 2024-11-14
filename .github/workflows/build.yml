@@ -405,8 +405,8 @@ jobs:
             if: ${{ matrix.runtime == 'node' && matrix.settings.container }}
             shell: wrap-shell {0}
             run: |
-                apt-get update
-                apt-get install nodejs
+                curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+                apt install -y nodejs
           - name: Check node
             if: ${{ matrix.runtime == 'node' && !matrix.settings.vm }}
             shell: wrap-shell {0}
@@ -422,8 +422,7 @@ jobs:
             if: ${{ matrix.runtime == 'bun' && matrix.settings.container }}
             shell: wrap-shell {0}
             run: |
-                apt-get update
-                apt-get install bun
+                curl -fsSL https://bun.sh/install | bash
           - name: Check Bun
             if: ${{ matrix.runtime == 'bun'  && !matrix.settings.vm }}
             shell: wrap-shell {0}
@@ -436,12 +435,11 @@ jobs:
             uses: denoland/setup-deno@v2
             with:
                 deno-version: v2.x
-          - name: Install Bun
+          - name: Install Deno
             if: ${{ matrix.runtime == 'deno' && matrix.settings.container }}
             shell: wrap-shell {0}
             run: |
-                apt-get update
-                apt-get install deno
+                curl -fsSL https://deno.land/install.sh | sh
           - name: Check Deno
             if: ${{ matrix.runtime == 'deno' && !matrix.settings.vm }}
             shell: wrap-shell {0}
