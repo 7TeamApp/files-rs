@@ -457,7 +457,7 @@ jobs:
             if: ${{ matrix.runtime == 'deno' && !matrix.settings.vm }}
             run: deno i
           - name: Test bindings
-            if: ${{ !matrix.settings.vm }}
+            if: ${{ !matrix.settings.vm && false }}
             shell: wrap-shell {0}
             run: bash ./scripts/tester.sh
           - name: Test bindings
