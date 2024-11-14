@@ -28,6 +28,7 @@ function runBunTest() {
 function runDenoVitest(){
     echo "using deno with vitest"
     deno task test
+}
 
 function runNpxVitest() {
     echo "using npx with vitest"
