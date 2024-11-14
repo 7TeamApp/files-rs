@@ -291,24 +291,28 @@ jobs:
                     target: x86_64-unknown-linux-musl
                     lib: musl
                     architecture: x64
+                    container: "node:20-alpine"
                   - host: ubuntu-latest
                     os: ubuntu
                     version: latest
                     target: aarch64-unknown-linux-gnu
                     lib: gnu
                     architecture: arm64
+                    container: "node:20-slim"
                   - host: ubuntu-latest
                     os: alpine
                     version: latest
                     target: aarch64-unknown-linux-musl
                     lib: musl
                     architecture: arm64
+                    container: "node:20-alpine"
                   - host: ubuntu-latest
                     os: debian
                     version: latest
                     target: armv7-unknown-linux-gnueabihf
                     lib: "gnu debian"
                     architecture: armv7
+                    container: "node:20-bullseye-slim"
                 node:
                     - 20
                 runtime:
@@ -335,66 +339,18 @@ jobs:
                 name: bindings-test-dist
                 path: 'test_dist'
           - name: Init
-            if: ${{ matrix.settings.architecture != 'x64' && matrix.settings.os == 'windows' }}
+            if: ${{ matrix.settings.container }}
             uses: sandervocke/setup-qemu-container@v1
             with:
-                container: "dockurr/windows:${{ matrix.settings.version }}"
+                container: ${{ matrix.settings.container }}
                 arch: ${{ matrix.settings.architecture }}
-                podman_args: -it --rm -p 8006:8006 --device=/dev/kvm --cap-add NET_ADMIN --stop-timeout 120
-          - name: Check os
-            if: ${{ (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos' ) && (matrix.settings.lib == 'gnu' || matrix.settings.os == 'windows' ) }}
-            run: |
-                uname -a
-                ldd --version
-          - name: Check os
-            if: ${{ matrix.settings.os == 'macos' }}
-            run: |
-                uname -a
-          - name: Install node
-            if: ${{ matrix.runtime == 'node' && matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
-            uses: actions/setup-node@v4.0.4
-            with:
-                node-version: ${{ matrix.node }}
-                architecture: ${{ matrix.settings.architecture }}
-          - name: Check node
-            if: ${{ matrix.runtime == 'node' && matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
-            run: |
-                node -v
-                npm -v
-                node -p "process.platform"
-                node -p "process.arch"
-          - name: Install Bun
-            if: ${{ matrix.runtime == 'bun' && matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
-            uses: oven-sh/setup-bun@v2.0.1
-          - name: Check Bun
-            if: ${{ matrix.runtime == 'bun' && matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
-            run: |
-                bun -v
-                bun -e "console.log(process.platform)"
-                bun -e "console.log(process.arch)"
-          - name: Install Deno
-            if: ${{ matrix.runtime == 'deno' }}
-            uses: denoland/setup-deno@v2
-            with:
-                deno-version: v2.x
-          - name: Check Deno
-            if: ${{ matrix.runtime == 'deno' }}
-            run: deno --version
-          - name: Install dependencies
-            if: ${{ matrix.runtime == 'node' && matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
-            run: npm i
-          - name: Install dependencies
-            if: ${{ matrix.runtime == 'bun' && matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
-            run: bun i
-          - name: Install dependencies
-            if: ${{ matrix.runtime == 'deno' && matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
-            run: deno i
+                podman_args: -v ${{ github.workspace }}:/build -w /build
           - name: Init
             if: ${{ matrix.settings.os == 'freebsd' }}
             uses: cross-platform-actions/action@v0.25.0
             with:
                 shutdown_vm: false
-                operating_system: freebsd
+                operating_system: ${{ matrix.settings.os }}
                 architecture: ${{ matrix.settings.architecture }}
                 version: ${{ matrix.settings.version }}
                 memory: 8G
@@ -408,84 +364,89 @@ jobs:
                     node -p "process.platform"
                     node -p "process.arch"
                     npm i
-                    npm run test
-          - name: Init
-            if: ${{ matrix.settings.architecture != 'x64' && matrix.settings.host == 'ubuntu-latest' && matrix.settings.os != 'windows' }}
-            uses: docker/setup-qemu-action@v3
+                    bash ./scripts/tester.sh
+          - name: Setup Shell Wrapper
+            uses: sandervocke/setup-shell-wrapper@v1
+          - name: Use regular shell
+            if: ${{ !matrix.settings.container }}
+            shell: bash
+            run: echo "WRAP_SHELL=bash" >> $GITHUB_ENV
+          - name: Use container shell
+            if: ${{ matrix.settings.container }}
+            shell: bash
+            run: echo "WRAP_SHELL=run-in-container.sh" >> $GITHUB_ENV
+          - name: Check os
+            if: ${{ matrix.settings.os != 'macos' && matrix.settings.os != 'freebsd' }}
+            shell: wrap-shell {0}
+            run: |
+                uname -a
+                ldd --version
+          - name: Check os
+            if: ${{ matrix.settings.os == 'macos' }}
+            shell: wrap-shell {0}
+            run: |
+                uname -a
+          - name: Install node
+            if: ${{ matrix.runtime == 'node' && matrix.settings.os != 'freebsd' && !matrix.settings.container }}
+            uses: actions/setup-node@v4.0.4
             with:
-                platforms: ${{ matrix.settings.architecture }}
-          - name: Init step 2
-            if: ${{ matrix.settings.architecture != 'x64' && matrix.settings.os != 'macos' && matrix.settings.os != 'windows'  }}
-            run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+                node-version: ${{ matrix.node }}
+                architecture: ${{ matrix.settings.architecture }}
+          - name: Check node
+            if: ${{ matrix.runtime == 'node' && matrix.settings.os != 'freebsd' }}
+            shell: wrap-shell {0}
+            run: |
+                node -v
+                npm -v
+                node -p "process.platform"
+                node -p "process.arch"
+          - name: Install Bun
+            if: ${{ matrix.runtime == 'bun' && matrix.settings.os != 'freebsd' && !matrix.settings.container }}
+            uses: oven-sh/setup-bun@v2.0.1
+          - name: Check Bun
+            if: ${{ matrix.runtime == 'bun'  && matrix.settings.os != 'freebsd' }}
+            shell: wrap-shell {0}
+            run: |
+                bun -v
+                bun -e "console.log(process.platform)"
+                bun -e "console.log(process.arch)"
+          - name: Install Deno
+            if: ${{ matrix.runtime == 'deno' && matrix.settings.os != 'freebsd' && !matrix.settings.container }}
+            uses: denoland/setup-deno@v2
+            with:
+                deno-version: v2.x
+          - name: Check Deno
+            if: ${{ matrix.runtime == 'deno' && matrix.settings.os != 'freebsd' }}
+            shell: wrap-shell {0}
+            run: deno --version
+          - name: Install dependencies
+            shell: wrap-shell {0}
+            if: ${{ matrix.runtime == 'node' && matrix.settings.os != 'freebsd' }}
+            run: npm i
+          - name: Install dependencies
+            shell: wrap-shell {0}
+            if: ${{ matrix.runtime == 'bun' && matrix.settings.os != 'freebsd' }}
+            run: bun i
+          - name: Install dependencies
+            shell: wrap-shell {0}
+            if: ${{ matrix.runtime == 'deno' && matrix.settings.os != 'freebsd' }}
+            run: deno i
           - name: Test bindings
-            if: ${{ matrix.settings.os != 'freebsd' && (matrix.settings.architecture == 'x64' || matrix.settings.os == 'macos') && matrix.settings.lib != 'musl' }}
+            if: ${{ matrix.settings.os != 'freebsd' }}
+            shell: wrap-shell {0}
             run: bash ./scripts/tester.sh
           - name: Test bindings
-            if: ${{ matrix.settings.os == 'ubuntu' && matrix.settings.architecture != 'x64' }}
-            uses: addnab/docker-run-action@v3
-            with:
-                image: "node:${{ matrix.node }}-slim"
-                options: '--platform linux/${{ matrix.settings.architecture }} --rm -v ${{ github.workspace }}:/build -w /build'
-                run: |
-                    set -e
-                    uname -a
-                    ldd --version
-                    node -v
-                    npm -v
-                    node -p "process.platform"
-                    node -p "process.arch"
-                    npm i -f
-                    npm run test
-          - name: Test bindings
-            if: ${{ matrix.settings.os == 'alpine' && matrix.settings.architecture == 'x64' }}
+            if: ${{ false }}
             uses: addnab/docker-run-action@v3
             with:
                 image: "node:${{ matrix.node }}-alpine"
-                options: '--platform linux/amd64 --rm -v ${{ github.workspace }}:/build -w /build'
-                run: |
-                    set -e
-                    uname -a
-                    node -v
-                    npm -v
-                    node -p "process.platform"
-                    node -p "process.arch"
-                    npm i -f
-                    npm run test
+                options: '--platform linux/amd64 --rm '
           - name: Test bindings
-            if: ${{ matrix.settings.os == 'alpine' && matrix.settings.architecture != 'x64' }}
+            if: ${{ false }}
             uses: addnab/docker-run-action@v3
             with:
-                image: "node:${{ matrix.node }}-alpine"
-                options: '--platform linux/${{ matrix.settings.architecture }} --rm -v ${{ github.workspace }}:/build -w /build'
-                run: |
-                    set -e
-                    uname -a
-                    node -v
-                    npm -v
-                    node -p "process.platform"
-                    node -p "process.arch"
-                    npm i -f
-                    npm run test
-          - name: Test bindings
-            if: ${{ matrix.settings.lib == 'gnu debian' && matrix.settings.architecture == 'armv7' }}
-            uses: addnab/docker-run-action@v3
-            with:
-                image: "node:${{ matrix.node }}-bullseye-slim"
-                options: '--platform linux/arm/v7 --rm -v ${{ github.workspace }}:/build -w /build'
-                run: |
-                    set -e
-                    uname -a
-                    ldd --version
-                    node -v
-                    npm -v
-                    node -p "process.platform"
-                    node -p "process.arch"
-                    npm i -f
-                    npm run test
-          - name: Test bindings
-            if: ${{ matrix.settings.os == 'windows' && matrix.settings.architecture != 'x64' }}
-            run: |
-                npm run test
+                image: "node:20-bullseye-slim"
+                options: '--platform linux/arm/v7 '
     Publish:
         name: Publish
         needs: 

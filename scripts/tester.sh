@@ -17,7 +17,7 @@ function runBun() {
 }
 
 function runDeno(){
-    ifComExist "deno" "runDenoVitest" "runNpxVitest"
+    ifComExist "deno" "runDenoVitest" "runNodeVitest"
 }
 
 function runBunTest() {
@@ -30,13 +30,13 @@ function runDenoVitest(){
     deno task test
 }
 
-function runNpxVitest() {
-    echo "using npx with vitest"
+function runNodeVitest() {
+    echo "using node with vitest"
     npx vitest run -r test
 }
 
-function runNpxJest() {
-    echo "using npx with jest"
+function runNodeJest() {
+    echo "using node with jest"
     npx jest --all --rootDir test_dist --testMatch '**/*.cjs'
 }
 
