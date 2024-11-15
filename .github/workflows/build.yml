@@ -361,7 +361,7 @@ jobs:
                 cpu_count: 4
                 shell: bash
                 run: |
-                    sudo bash ./scripts/packetManager.sh install -y -f node npm
+                    sudo pkg install -y -f node npm
                     uname -a
                     node -v
                     npm -v
