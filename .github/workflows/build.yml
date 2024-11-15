@@ -381,6 +381,7 @@ jobs:
             if: ${{ matrix.settings.vm }}
             run: echo "WRAP_SHELL=bash" >> $GITHUB_ENV
           - name: Use root profile
+            if: ${{ matrix.settings.host != 'windows-latest' }}
             run: sudo su
           - name: Verify privileges
             run: whoami
