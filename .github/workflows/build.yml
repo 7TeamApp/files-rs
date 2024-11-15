@@ -380,14 +380,6 @@ jobs:
           - name: Use vm shell
             if: ${{ matrix.settings.vm }}
             run: echo "WRAP_SHELL=bash" >> $GITHUB_ENV
-          - name: Use root profile
-            if: ${{ matrix.settings.host != 'windows-latest' }}
-            run: sudo su
-          - name: Verify privileges
-            run: whoami
-          - name: Chec patch
-            shell: wrap-shell {0}
-            run: echo $PATH
           - name: Check os
             if: ${{ matrix.settings.os != 'macos' && !matrix.settings.vm && matrix.settings.os != 'alpine' }}
             shell: wrap-shell {0}
@@ -402,11 +394,11 @@ jobs:
           - name: Update packages
             if: ${{ matrix.settings.os != 'macos' && !matrix.settings.vm && matrix.settings.os != 'windows' }}
             shell: wrap-shell {0}
-            run: bash ./scripts/packetManager.sh update
+            run: ./scripts/packetManager.sh update
           - name: Install curl
             if: ${{ matrix.settings.os == 'ubuntu' || matrix.settings.os == 'alpine' || matrix.settings.os == 'debian' }}
             shell: wrap-shell {0}
-            run: bash ./scripts/packetManager.sh install curl
+            run: ./scripts/packetManager.sh install curl
           - name: Check curl
             shell: wrap-shell {0}
             run: curl --version
@@ -474,7 +466,7 @@ jobs:
           - name: Test bindings
             if: ${{ !matrix.settings.vm && false }}
             shell: wrap-shell {0}
-            run: bash ./scripts/tester.sh
+            run: ./scripts/tester.sh
     Publish:
         name: Publish
         needs: 
