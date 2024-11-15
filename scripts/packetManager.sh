@@ -13,15 +13,15 @@ function ifComExist() {
 }
 
 function runApt(){
-    ifComExist "sudo" "sudo apt \"$@\"" "apt \"$@\""
+    ifComExist "sudo" "sudo apt $@" "apt $@"
 }
 
 function runApk(){
-    ifComExist "sudo" "sudo apk \"$@\"" "apk \"$@\""
+    ifComExist "sudo" "sudo apk $@" "apk $@"
 }
 
 function runPacketManager() {
-    ifComExist "apt" "runApt \"$@\"" "runApk \"$@\""
+    ifComExist "apt" "runApt $@" "runApk $@"
 }
 
 runPacketManager "$@"
