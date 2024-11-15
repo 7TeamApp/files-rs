@@ -292,7 +292,7 @@ jobs:
                     target: x86_64-unknown-linux-musl
                     lib: musl
                     architecture: x64
-                    container: "node:20-alpine"
+                    container: "alpine:latest"
                     container_architecture: amd64
                   - host: ubuntu-latest
                     os: ubuntu
@@ -308,16 +308,16 @@ jobs:
                     target: aarch64-unknown-linux-musl
                     lib: musl
                     architecture: arm64
-                    container: "node:20-alpine"
+                    container: "alpine:latest"
                     container_architecture: arm64
                   - host: ubuntu-latest
                     os: debian
                     version: latest
                     target: armv7-unknown-linux-gnueabihf
                     lib: "gnu debian"
-                    architecture: armv7
-                    container: "node:20-bullseye-slim"
-                    container_architecture: armv7   
+                    architecture: arm
+                    container: "debian"
+                    container_architecture: arm
                 node:
                     - 20
                 runtime:
@@ -467,18 +467,6 @@ jobs:
             if: ${{ !matrix.settings.vm && false }}
             shell: wrap-shell {0}
             run: bash ./scripts/tester.sh
-          - name: Test bindings
-            if: ${{ false }}
-            uses: addnab/docker-run-action@v3
-            with:
-                image: "node:${{ matrix.node }}-alpine"
-                options: '--platform linux/amd64 --rm '
-          - name: Test bindings
-            if: ${{ false }}
-            uses: addnab/docker-run-action@v3
-            with:
-                image: "node:20-bullseye-slim"
-                options: '--platform linux/arm/v7 '
     Publish:
         name: Publish
         needs: 
