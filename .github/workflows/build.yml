@@ -381,10 +381,8 @@ jobs:
             if: ${{ matrix.settings.vm }}
             run: echo "WRAP_SHELL=bash" >> $GITHUB_ENV
           - name: Use root profile
-            shell: wrap-shell {0}
             run: sudo su
           - name: Verify privileges
-            shell: wrap-shell {0}
             run: whoami
           - name: Chec patch
             shell: wrap-shell {0}
