@@ -20,7 +20,7 @@ permissions:
     pull_request: null
 defaults:
     run:
-        shell: sudo bash
+        shell: bash
 jobs:
     Build:
         strategy:
@@ -94,14 +94,14 @@ jobs:
                   - host: ubuntu-latest
                     target: riscv64gc-unknown-linux-gnu
                     setup: |
-                        apt-get update
-                        apt-get install gcc-riscv64-linux-gnu -y
+                        sudo apt-get update
+                        sudo apt-get install gcc-riscv64-linux-gnu -y
                     build: yarn build --target riscv64gc-unknown-linux-gnu
                   - host: ubuntu-latest
                     target: x86_64-unknown-freebsd
                     architecture: x86_64
                     build: |
-                        pkg install -y -f node npm
+                        sudo pkg install -y -f node npm
                         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --profile minimal --default-toolchain stable -y
                         . "$HOME/.cargo/env"
                         npm i
@@ -361,8 +361,7 @@ jobs:
                 cpu_count: 4
                 shell: bash
                 run: |
-                    sudo su
-                    pkg install -y -f node npm
+                    sudo pkg install -y -f node npm
                     uname -a
                     node -v
                     npm -v
@@ -377,34 +376,40 @@ jobs:
             run: echo "WRAP_SHELL=bash" >> $GITHUB_ENV
           - name: Use container shell
             if: ${{ matrix.settings.container }}
-            run: echo "WRAP_SHELL='sudo run-in-container.sh'" >> $GITHUB_ENV
+            run: echo "WRAP_SHELL=run-in-container.sh" >> $GITHUB_ENV
           - name: Use vm shell
             if: ${{ matrix.settings.vm }}
-            run: echo "WRAP_SHELL='sudo bash'" >> $GITHUB_ENV
-          - name: Check patch
-            shell: sudo wrap-shell {0}
+            run: echo "WRAP_SHELL=bash" >> $GITHUB_ENV
+          - name: Use root profile
+            shell: wrap-shell {0}
+            run: sudo su
+          - name: Verify privileges
+            shell: wrap-shell {0}
+            run: whoami
+          - name: Chec patch
+            shell: wrap-shell {0}
             run: echo $PATH
           - name: Check os
             if: ${{ matrix.settings.os != 'macos' && !matrix.settings.vm && matrix.settings.os != 'alpine' }}
-            shell: sudo wrap-shell {0}
+            shell: wrap-shell {0}
             run: |
                 uname -a
                 ldd --version
           - name: Check os
             if: ${{ matrix.settings.os == 'macos' || matrix.settings.os == 'alpine' }}
-            shell: sudo wrap-shell {0}
+            shell: wrap-shell {0}
             run: |
                 uname -a
           - name: Update packages
             if: ${{ matrix.settings.os != 'macos' && !matrix.settings.vm && matrix.settings.os != 'windows' }}
-            shell: sudo wrap-shell {0}
+            shell: wrap-shell {0}
             run: bash ./scripts/packetManager.sh update
           - name: Install curl
             if: ${{ matrix.settings.os == 'ubuntu' || matrix.settings.os == 'alpine' || matrix.settings.os == 'debian' }}
-            shell: sudo wrap-shell {0}
+            shell: wrap-shell {0}
             run: bash ./scripts/packetManager.sh install curl
           - name: Check curl
-            shell: sudo wrap-shell {0}
+            shell: wrap-shell {0}
             run: curl --version
           - name: Install node
             if: ${{ matrix.runtime == 'node' && !matrix.settings.vm && !matrix.settings.container }}
@@ -414,13 +419,13 @@ jobs:
                 architecture: ${{ matrix.settings.architecture }}
           - name: Install node
             if: ${{ matrix.runtime == 'node' && matrix.settings.container }}
-            shell: sudo wrap-shell {0}
+            shell: wrap-shell {0}
             run: |
                 curl -fsSL https://deb.nodesource.com/setup_${{ matrix.node }}.x | sudo -E bash -
                 bash ./scripts/packetManager.sh install -y nodejs
           - name: Check node
             if: ${{ matrix.runtime == 'node' && !matrix.settings.vm }}
-            shell: sudo wrap-shell {0}
+            shell: wrap-shell {0}
             run: |
                 node -v
                 npm -v
@@ -431,12 +436,12 @@ jobs:
             uses: oven-sh/setup-bun@v2.0.1
           - name: Install Bun
             if: ${{ matrix.runtime == 'bun' && matrix.settings.container }}
-            shell: sudo wrap-shell {0}
+            shell: wrap-shell {0}
             run: |
                 curl -fsSL https://bun.sh/install | bash
           - name: Check Bun
             if: ${{ matrix.runtime == 'bun'  && !matrix.settings.vm }}
-            shell: sudo wrap-shell {0}
+            shell: wrap-shell {0}
             run: |
                 bun -v
                 bun -e "console.log(process.platform)"
@@ -448,28 +453,28 @@ jobs:
                 deno-version: v2.x
           - name: Install Deno
             if: ${{ matrix.runtime == 'deno' && matrix.settings.container }}
-            shell: sudo wrap-shell {0}
+            shell: wrap-shell {0}
             run: |
                 curl -fsSL https://deno.land/install.sh | sh
           - name: Check Deno
             if: ${{ matrix.runtime == 'deno' && !matrix.settings.vm }}
-            shell: sudo wrap-shell {0}
+            shell: wrap-shell {0}
             run: deno --version
           - name: Install dependencies
-            shell: sudo wrap-shell {0}
+            shell: wrap-shell {0}
             if: ${{ matrix.runtime == 'node' && !matrix.settings.vm }}
             run: npm i
           - name: Install dependencies
-            shell: sudo wrap-shell {0}
+            shell: wrap-shell {0}
             if: ${{ matrix.runtime == 'bun' && !matrix.settings.vm }}
             run: bun i
           - name: Install dependencies
-            shell: sudo wrap-shell {0}
+            shell: wrap-shell {0}
             if: ${{ matrix.runtime == 'deno' && !matrix.settings.vm }}
             run: deno i
           - name: Test bindings
             if: ${{ !matrix.settings.vm && false }}
-            shell: sudo wrap-shell {0}
+            shell: wrap-shell {0}
             run: bash ./scripts/tester.sh
     Publish:
         name: Publish
