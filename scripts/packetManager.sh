@@ -2,7 +2,7 @@
 
 function run(){
     echo "Run $@"
-    $@
+    eval "$@"
 }
 
 function ifComExist() {
@@ -10,10 +10,10 @@ function ifComExist() {
     local fnTrue="$2"
     local fnFalse="$3"
 
-    if $tester --help &> /dev/null; then
-        $fnTrue
+    if  command -v $tester &> /dev/null; then
+        eval "$fnTrue"
     else
-        $fnFalse
+        eval $"fnFalse"
     fi
 }
 
@@ -23,6 +23,10 @@ function runApt(){
 
 function runApk(){
     ifComExist "sudo" "run sudo apk $@" "run apk $@"
+}
+
+function runAptGet(){
+    ifComExist "sudo" "run sudo apt-get $@" "run apt-get $@"
 }
 
 function runPacketManager() {
