@@ -396,7 +396,7 @@ jobs:
             shell: wrap-shell {0}
             run: bash ./scripts/packetManager.sh update
           - name: Install curl
-            if: ${{ matrix.settings.os == 'ubuntu' || matrix.settings.os == 'alpine' }}
+            if: ${{ matrix.settings.os == 'ubuntu' || matrix.settings.os == 'alpine' || matrix.settings.os == 'debian' }}
             shell: wrap-shell {0}
             run: bash ./scripts/packetManager.sh install curl
           - name: Check curl

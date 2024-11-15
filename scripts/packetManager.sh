@@ -1,5 +1,10 @@
 #!/bin/bash
 
+function run(){
+    echo "Run $@"
+    $@
+}
+
 function ifComExist() {
     local tester="$1"
     local fnTrue="$2"
@@ -13,11 +18,11 @@ function ifComExist() {
 }
 
 function runApt(){
-    ifComExist "sudo" "sudo apt $@" "apt $@"
+    ifComExist "sudo" "run sudo apt $@" "run apt $@"
 }
 
 function runApk(){
-    ifComExist "sudo" "sudo apk $@" "apk $@"
+    ifComExist "sudo" "run sudo apk $@" "run apk $@"
 }
 
 function runPacketManager() {
