@@ -13,7 +13,7 @@ function ifComExist() {
     if  command -v $tester &> /dev/null; then
         eval "$fnTrue"
     else
-        eval $"fnFalse"
+        eval "$fnFalse"
     fi
 }
 
