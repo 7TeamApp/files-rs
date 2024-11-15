@@ -391,9 +391,9 @@ jobs:
             shell: wrap-shell {0}
             run: |
                 uname -a
-          - name: LS
+          - name: Chmod
             shell: wrap-shell {0}
-            run: ls -l
+            run: chmod +x ./scripts/packetManager.sh
           - name: Update packages
             if: ${{ matrix.settings.os != 'macos' && !matrix.settings.vm && matrix.settings.os != 'windows' }}
             shell: wrap-shell {0}
