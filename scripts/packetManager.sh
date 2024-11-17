@@ -23,6 +23,7 @@ function runApt(){
 }
 
 function runApk(){
+    echo "$@"
     ifComExist "sudo" "run sudo apk $@" "run apk $@"
 }
 
