@@ -18,6 +18,7 @@ function ifComExist() {
 }
 
 function runApt(){
+    echo "$@"
     ifComExist "sudo" "run sudo apt $@" "run apt $@"
 }
 
@@ -30,7 +31,9 @@ function runAptGet(){
 }
 
 function runPacketManager() {
+    echo "$@"
     ifComExist "apt" "runApt $@" "runApk $@"
 }
 
+echo "$@"
 runPacketManager "$@"
