@@ -292,7 +292,7 @@ jobs:
                     target: x86_64-unknown-linux-musl
                     lib: musl
                     architecture: x64
-                    container: "alpine:latest"
+                    container: "openebs/alpine-bash:latest"
                     container_architecture: amd64
                   - host: ubuntu-latest
                     os: ubuntu
@@ -308,7 +308,7 @@ jobs:
                     target: aarch64-unknown-linux-musl
                     lib: musl
                     architecture: arm64
-                    container: "alpine:latest"
+                    container: "openebs/alpine-bash:latest"
                     container_architecture: arm64
                   - host: ubuntu-latest
                     os: debian
