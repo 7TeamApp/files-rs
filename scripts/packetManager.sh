@@ -18,11 +18,13 @@ function ifComExist() {
 }
 
 function runApt(){
+    echo "you are here 1"
     echo "$@"
     ifComExist "sudo" "run sudo apt $@" "run apt $@"
 }
 
 function runApk(){
+    echo "you are here 2"
     echo "$@"
     ifComExist "sudo" "run sudo apk $@" "run apk $@"
 }
