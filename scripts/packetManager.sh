@@ -10,6 +10,9 @@ function ifComExist() {
     local fnTrue="$2"
     local fnFalse="$3"
 
+    echo "$fnTrue"
+    echo "$fnFalse"
+
     if  command -v $tester &> /dev/null; then
         eval "$fnTrue"
     else
