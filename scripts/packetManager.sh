@@ -1,8 +1,8 @@
 #!/bin/bash
 
 function run(){
-    echo "Run $@"
-    eval "$@"
+    echo "Run $*"
+    eval "$*"
 }
 
 function ifComExist() {
@@ -22,20 +22,20 @@ function ifComExist() {
 
 function runApt(){
     echo "you are here 1"
-    echo "$@"
-    ifComExist "sudo" "run sudo apt \"$@\"" "run apt \"$@\""
+    echo "$*"
+    ifComExist "sudo" "run sudo apt $*" "run apt $*"
 }
 
 function runApk(){
-    ifComExist "sudo" "run sudo apk \"$@\"" "run apk \"$@\""
+    ifComExist "sudo" "run sudo apk $*" "run apk $*"
 }
 
 function runAptGet(){
-    ifComExist "sudo" "run sudo apt-get \"$@\"" "run apt-get \"$@\""
+    ifComExist "sudo" "run sudo apt-get $*" "run apt-get $*"
 }
 
 function runPacketManager() {
-     ifComExist "apt" "runApt \"$@\"" "runApk \"$@\""
+    ifComExist "apt" "runApt $*" "runApk $*"
 }
 
-runPacketManager "$@"
+runPacketManager "$*"
