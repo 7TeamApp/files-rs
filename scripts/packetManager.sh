@@ -10,9 +10,6 @@ function ifComExist() {
     local fnTrue="$2"
     local fnFalse="$3"
 
-    echo "$fnTrue"
-    echo "$fnFalse"
-
     if  command -v $tester &> /dev/null; then
         eval "$fnTrue"
     else
@@ -21,12 +18,13 @@ function ifComExist() {
 }
 
 function runApt(){
-    echo "you are here 1"
-    echo "$*"
     ifComExist "sudo" "run sudo apt $*" "run apt $*"
 }
 
 function runApk(){
+    if [ "$1" == "install" ]; then
+        set -- "add" "${@:2}"
+    fi
     ifComExist "sudo" "run sudo apk $*" "run apk $*"
 }
 
