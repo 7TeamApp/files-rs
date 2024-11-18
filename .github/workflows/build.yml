@@ -424,7 +424,8 @@ jobs:
             run: |
                 set -e
                 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-                source ~/.bashrc
+                export NVM_DIR="/home/runner/.nvm"
+                export PATH="$NVM_DIR:$PATH"
                 nvm install ${{ matrix.node }}
                 nvm use ${{ matrix.node }}
           - name: Check node
@@ -445,7 +446,8 @@ jobs:
             run: |
                 set -e
                 curl -fsSL https://bun.sh/install | bash
-                source ~/.bashrc
+                export BUN_BIN="$HOME/.bun/bin" 
+                export PATH="$BUN_BIN:$PATH" 
           - name: Check Bun
             if: ${{ matrix.runtime == 'bun'  && !matrix.settings.vm }}
             shell: wrap-shell {0}
@@ -465,7 +467,8 @@ jobs:
             run: |
                 set -e
                 curl -fsSL https://deno.land/install.sh | bash
-                source ~/.bashrc
+                export DENO_BIN="/root/.deno/bin/deno" 
+                export PATH="$DENO_BIN:$PATH" 
           - name: Check Deno
             if: ${{ matrix.runtime == 'deno' && !matrix.settings.vm }}
             shell: wrap-shell {0}
