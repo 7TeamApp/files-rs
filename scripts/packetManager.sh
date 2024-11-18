@@ -23,23 +23,19 @@ function ifComExist() {
 function runApt(){
     echo "you are here 1"
     echo "$@"
-    ifComExist "sudo" "run sudo apt $@" "run apt $@"
+    ifComExist "sudo" "run sudo apt \"$@\"" "run apt \"$@\""
 }
 
 function runApk(){
-    echo "you are here 2"
-    echo "$@"
-    ifComExist "sudo" "run sudo apk $@" "run apk $@"
+    ifComExist "sudo" "run sudo apk \"$@\"" "run apk \"$@\""
 }
 
 function runAptGet(){
-    ifComExist "sudo" "run sudo apt-get $@" "run apt-get $@"
+    ifComExist "sudo" "run sudo apt-get \"$@\"" "run apt-get \"$@\""
 }
 
 function runPacketManager() {
-    echo "$@"
-    ifComExist "apt" "runApt $@" "runApk $@"
+     ifComExist "apt" "runApt \"$@\"" "runApk \"$@\""
 }
 
-echo "$@"
 runPacketManager "$@"
