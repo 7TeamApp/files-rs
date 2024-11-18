@@ -413,7 +413,7 @@ jobs:
             shell: wrap-shell {0}
             run: |
                 curl -fsSL https://deb.nodesource.com/setup_${{ matrix.node }}.x | sudo -E bash -
-                bash ./scripts/packetManager.sh install -y nodejs
+                bash ./scripts/packetManager.sh install nodejs
           - name: Check node
             if: ${{ matrix.runtime == 'node' && !matrix.settings.vm }}
             shell: wrap-shell {0}
