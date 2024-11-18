@@ -361,6 +361,7 @@ jobs:
                 cpu_count: 4
                 shell: bash
                 run: |
+                    set -e
                     sudo pkg install -y -f node npm
                     uname -a
                     node -v
@@ -384,6 +385,7 @@ jobs:
             if: ${{ matrix.settings.os != 'macos' && !matrix.settings.vm && matrix.settings.os != 'alpine' }}
             shell: wrap-shell {0}
             run: |
+                set -e
                 uname -a
                 ldd --version
           - name: Check os
@@ -412,12 +414,14 @@ jobs:
             if: ${{ matrix.runtime == 'node' && matrix.settings.container }}
             shell: wrap-shell {0}
             run: |
+                set -e
                 curl -fsSL https://deb.nodesource.com/setup_${{ matrix.node }}.x | sudo -E bash -
-                bash ./scripts/packetManager.sh install nodejs
+                bash ./scripts/packetManager.sh install nodejs npm
           - name: Check node
             if: ${{ matrix.runtime == 'node' && !matrix.settings.vm }}
             shell: wrap-shell {0}
             run: |
+                set -e
                 node -v
                 npm -v
                 node -p "process.platform"
@@ -434,6 +438,7 @@ jobs:
             if: ${{ matrix.runtime == 'bun'  && !matrix.settings.vm }}
             shell: wrap-shell {0}
             run: |
+                set -e
                 bun -v
                 bun -e "console.log(process.platform)"
                 bun -e "console.log(process.arch)"
