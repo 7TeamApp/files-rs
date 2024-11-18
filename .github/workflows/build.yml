@@ -398,12 +398,20 @@ jobs:
             shell: wrap-shell {0}
             run: bash ./scripts/packetManager.sh update
           - name: Install curl
-            if: ${{ matrix.settings.os == 'ubuntu' || matrix.settings.os == 'alpine' || matrix.settings.os == 'debian' }}
+            if: ${{ matrix.settings.os != 'macos' && !matrix.settings.vm && matrix.settings.os != 'windows' }}
             shell: wrap-shell {0}
             run: bash ./scripts/packetManager.sh install curl
           - name: Check curl
             shell: wrap-shell {0}
             run: curl --version
+          - name: Install unzip
+            if: ${{ matrix.settings.os != 'macos' && !matrix.settings.vm && matrix.settings.os != 'windows' }}
+            shell: wrap-shell {0}
+            run: bash ./scripts/packetManager.sh install unzip
+          - name: Check unzip
+            if: ${{ matrix.settings.os != 'macos' && !matrix.settings.vm && matrix.settings.os != 'windows' }}
+            shell: wrap-shell {0}
+            run: unzip --version
           - name: Install node
             if: ${{ matrix.runtime == 'node' && !matrix.settings.vm && !matrix.settings.container }}
             uses: actions/setup-node@v4.0.4
