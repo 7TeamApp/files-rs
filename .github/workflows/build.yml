@@ -411,7 +411,7 @@ jobs:
           - name: Check unzip
             if: ${{ matrix.settings.os != 'macos' && !matrix.settings.vm && matrix.settings.os != 'windows' }}
             shell: wrap-shell {0}
-            run: unzip --version
+            run: unzip -v
           - name: Install node
             if: ${{ matrix.runtime == 'node' && !matrix.settings.vm && !matrix.settings.container }}
             uses: actions/setup-node@v4.0.4
