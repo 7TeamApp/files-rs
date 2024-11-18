@@ -18,6 +18,10 @@ function ifComExist() {
 }
 
 function runApt(){
+    if [ "$1" == "install" ]; then
+        set -- "install" "${@:2}" "-y"
+    fi
+
     ifComExist "sudo" "run sudo apt $*" "run apt $*"
 }
 
