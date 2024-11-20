@@ -381,9 +381,6 @@ jobs:
           - name: Use vm shell
             if: ${{ matrix.settings.vm }}
             run: echo "WRAP_SHELL=bash" >> $GITHUB_ENV
-          - name: Some Check
-            shell: wrap-shell {0}
-            run: cat ~/.bashrc
           - name: Check os
             if: ${{ matrix.settings.os != 'macos' && !matrix.settings.vm && matrix.settings.os != 'alpine' }}
             shell: wrap-shell {0}
@@ -427,8 +424,10 @@ jobs:
             run: |
                 set -e
                 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-                export NVM_DIR="/home/runner/.nvm"
-                export PATH="$NVM_DIR:$PATH"
+
+                echo "export NVM_DIR=/home/runner/.nvm" >> ~/.bashrc
+                echo "export PATH=\$PATH:$NVM_DIR" >> ~/.bashrc
+
                 nvm install ${{ matrix.node }}
                 nvm use ${{ matrix.node }}
           - name: Check node
@@ -449,8 +448,9 @@ jobs:
             run: |
                 set -e
                 curl -fsSL https://bun.sh/install | bash
-                export BUN_BIN="$HOME/.bun/bin" 
-                export PATH="$BUN_BIN:$PATH" 
+
+                echo "export BUN_BIN=~/.bun/bin" >> ~/.bashrc
+                echo "export PATH=\$PATH:$BUN_BIN" >> ~/.bashrc
           - name: Check Bun
             if: ${{ matrix.runtime == 'bun'  && !matrix.settings.vm }}
             shell: wrap-shell {0}
@@ -470,8 +470,9 @@ jobs:
             run: |
                 set -e
                 curl -fsSL https://deno.land/install.sh | bash
-                export DENO_BIN="/root/.deno/bin/deno" 
-                export PATH="$DENO_BIN:$PATH" 
+
+                echo "export DENO_BIN=/root/.deno/bin/deno" >> ~/.bashrc
+                echo "export PATH=\$PATH:$DENO_BIN" >> ~/.bashrc
           - name: Check Deno
             if: ${{ matrix.runtime == 'deno' && !matrix.settings.vm }}
             shell: wrap-shell {0}
