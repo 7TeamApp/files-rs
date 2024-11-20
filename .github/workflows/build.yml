@@ -381,6 +381,9 @@ jobs:
           - name: Use vm shell
             if: ${{ matrix.settings.vm }}
             run: echo "WRAP_SHELL=bash" >> $GITHUB_ENV
+          - name: Some Check
+            shell: wrap-shell {0}
+            run: cat ~/.bashrc
           - name: Check os
             if: ${{ matrix.settings.os != 'macos' && !matrix.settings.vm && matrix.settings.os != 'alpine' }}
             shell: wrap-shell {0}
